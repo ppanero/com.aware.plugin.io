@@ -1,4 +1,4 @@
-package com.aware.plugin.io_pablo_panero;
+package com.aware.plugin.io_panero;
 
 import com.aware.Aware;
 

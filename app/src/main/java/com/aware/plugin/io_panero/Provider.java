@@ -1,4 +1,4 @@
-package com.aware.plugin.io_pablo_panero;
+package com.aware.plugin.io_panero;
 
 import java.util.HashMap;
 
@@ -20,21 +20,21 @@ import com.aware.utils.DatabaseHelper;
 
 public class Provider extends ContentProvider {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     /**
-     * Provider authority: com.aware.plugin.IO.provider.IO
+     * Provider authority: com.aware.plugin.io_panero.provider.io
      */
 
-    public static String AUTHORITY = "com.aware.plugin.IO.provider.IO";
+    public static String AUTHORITY = "com.aware.plugin.io_panero.provider.io";
 
     private static final int IO_METER = 1;
     private static final int IO_METER_ID = 2;
 
-    public static final String DATABASE_NAME = Environment.getExternalStorageDirectory() + "/AWARE/plugin_IO.db";
+    public static final String DATABASE_NAME = Environment.getExternalStorageDirectory() + "/AWARE/plugin_io.db";
 
     public static final String[] DATABASE_TABLES = {
-            "plugin_IO"
+            "plugin_io"
     };
 
     public static final String[] TABLES_FIELDS = {
@@ -49,15 +49,15 @@ public class Provider extends ContentProvider {
     public static final class IOMeter_Data implements BaseColumns {
         private IOMeter_Data(){};
 
-        public static final Uri CONTENT_URI = Uri.parse("content://"+AUTHORITY+"/plugin_IO");
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.aware.plugin.IO";
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.aware.plugin.IO";
+        public static final Uri CONTENT_URI = Uri.parse("content://"+AUTHORITY+"/plugin_io");
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.aware.plugin.io";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.aware.plugin.io";
 
         public static final String _ID = "_id";
         public static final String TIMESTAMP = "timestamp";
         public static final String DEVICE_ID = "device_id";
         public static final String IO_STATUS = "io_status";
-        public static final String IO_CONFIDENCE= "io_confidence";
+        public static final String IO_CONFIDENCE= "double_io_confidence";
     }
 
     private static UriMatcher URIMatcher;
@@ -68,7 +68,7 @@ public class Provider extends ContentProvider {
     @Override
     public boolean onCreate() {
 
-        AUTHORITY = getContext().getPackageName() + ".provider.IO";
+        AUTHORITY = getContext().getPackageName() + ".provider.io";
 
         URIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         URIMatcher.addURI(AUTHORITY, DATABASE_TABLES[0], IO_METER);

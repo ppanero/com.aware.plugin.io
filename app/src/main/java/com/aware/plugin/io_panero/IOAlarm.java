@@ -1,4 +1,4 @@
-package com.aware.plugin.io_pablo_panero;
+package com.aware.plugin.io_panero;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -15,11 +15,13 @@ public class IOAlarm extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Aware.setSetting(context, Aware_Preferences.STATUS_LIGHT, true);
-        Aware.setSetting(context, Aware_Preferences.STATUS_ACCELEROMETER, true);
+        //Aware.setSetting(context, Aware_Preferences.STATUS_ACCELEROMETER, true);
         Aware.setSetting(context, Aware_Preferences.STATUS_MAGNETOMETER, true);
         Intent apply = new Intent(Aware.ACTION_AWARE_REFRESH);
         context.sendBroadcast(apply);
-        Plugin.lockOff(context);
+        Plugin.lockOff(context, Plugin.lockLight);
+        Plugin.lockOff(context, Plugin.lockAccelerometer);
+        Plugin.lockOff(context, Plugin.lockMagnetometer);
     }
 
     public void SetAlarm(Context context, int interval) {
