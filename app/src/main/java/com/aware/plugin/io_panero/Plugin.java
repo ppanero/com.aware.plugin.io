@@ -12,6 +12,8 @@ import com.aware.providers.*;
 import com.aware.plugin.io_panero.Provider.IOMeter_Data;
 import com.aware.utils.Aware_Plugin;
 
+import java.util.Calendar;
+
 public class Plugin extends Aware_Plugin {
 
     public static final String ACTION_AWARE_PLUGIN_IO_METER = "ACTION_AWARE_PLUGIN_IO_METER";
@@ -31,9 +33,10 @@ public class Plugin extends Aware_Plugin {
     The first columns will have either 1 (indoor) or 0 (outdoor).
     The second column will have the confidence of the sensor in that precise moment,
     therefor it will change in time.
+    The third column is its value.
      */
     private static final int NUMBER_OF_SENSORS = 5;
-    private static double[][] decisionMatrix = new double[2][5]; //{{0,0},{0,0},{0,0},{0,0},{0,0}};
+    private static double[][] decisionMatrix = new double[3][5]; //{{0,0},{0,0},{0,0},{0,0},{0,0}};
     private static BatteryObserver batteryObserver;
     private static TelephonyObserver telephonyObserver;
     private LightReceiver lightReceiver = new LightReceiver();
@@ -46,6 +49,10 @@ public class Plugin extends Aware_Plugin {
     protected static boolean lockLight = false;
     protected static boolean lockMagnetometer = false;
     protected static boolean lockAccelerometer = false;
+    private static boolean lightReady = false;
+    private static boolean accelerometerReady = false;
+    private static boolean magnetometerReady = false;
+    protected static boolean alarmSet = false;
     private IOAlarm alarm = new IOAlarm();
     private static double GRAVITY = 9.81;
 
@@ -60,17 +67,19 @@ public class Plugin extends Aware_Plugin {
 
         //initialize decission matrix
         for(int i = 0; i < NUMBER_OF_SENSORS; i++){
-            decisionMatrix[0][i] = 0;
-            decisionMatrix[1][i] = 0;
+            decisionMatrix[0][i] = -1;
+            decisionMatrix[1][i] = -1;
+            decisionMatrix[2][i] = 0;
         }
 
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_BATTERY, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_TELEPHONY, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_MAGNETOMETER, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.FREQUENCY_MAGNETOMETER, 200000);
-        //Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ACCELEROMETER, true);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ACCELEROMETER, true);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.FREQUENCY_ACCELEROMETER, 200000);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_LIGHT, true);
-        Aware.setSetting(getApplicationContext(), Aware_Preferences.FREQUENCY_LIGHT, 20000);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.FREQUENCY_LIGHT, 60000);
 
 
         if( Aware.getSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER).length() == 0 ) {
@@ -85,16 +94,8 @@ public class Plugin extends Aware_Plugin {
             Aware.setSetting(getApplicationContext(), Settings.SAMPLES_LIGHT_METER, 10);
         }
 
-        if( Aware.getSetting(getApplicationContext(), Settings.FREQUENCY_ACCELEROMETER).length() == 0 ) {
-            Aware.setSetting(getApplicationContext(), Settings.FREQUENCY_ACCELEROMETER, 10);
-        }
-
-        if( Aware.getSetting(getApplicationContext(), Settings.FREQUENCY_MAGNETOMETER).length() == 0 ) {
-            Aware.setSetting(getApplicationContext(), Settings.FREQUENCY_MAGNETOMETER, 10);
-        }
-
-        if( Aware.getSetting(getApplicationContext(), Settings.FREQUENCY_LIGHT_METER).length() == 0 ) {
-            Aware.setSetting(getApplicationContext(), Settings.FREQUENCY_LIGHT_METER, 10);
+        if( Aware.getSetting(getApplicationContext(), Settings.FREQUENCY_IO_METER).length() == 0 ) {
+            Aware.setSetting(getApplicationContext(), Settings.FREQUENCY_IO_METER, 2);
         }
 
         contextProducer = new ContextProducer() {
@@ -136,10 +137,10 @@ public class Plugin extends Aware_Plugin {
         //Apply settings
         sendBroadcast(new Intent(Aware.ACTION_AWARE_REFRESH));
     }
-    /*
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int interval_min = Integer.parseInt(Aware.getSetting(getApplicationContext(), Settings.FREQUENCY_LIGHT_METER));
+        int interval_min = Integer.parseInt(Aware.getSetting(getApplicationContext(), Settings.FREQUENCY_IO_METER));
 
         if (interval_min != temp_interval) {
             if (interval_min >= 1) {
@@ -151,7 +152,7 @@ public class Plugin extends Aware_Plugin {
         }
         return START_STICKY;
     }
-    */
+
 
     @Override
     public void onDestroy() {
@@ -184,7 +185,7 @@ public class Plugin extends Aware_Plugin {
                 indoor_confidence += decisionMatrix[1][i];
                 indoor_counter += 1;
             }
-            else if(decisionMatrix[1][i] != 0){
+            else if(decisionMatrix[0][i] == 0){
                 outdoor_confidence += decisionMatrix[1][i];
                 outdoor_counter += 1;
             }
@@ -201,10 +202,22 @@ public class Plugin extends Aware_Plugin {
         data.put(IOMeter_Data.TIMESTAMP, System.currentTimeMillis());
         data.put(IOMeter_Data.IO_STATUS, io_status);
         data.put(IOMeter_Data.IO_CONFIDENCE, overallConfidence);
+        data.put(IOMeter_Data.IO_MAGNETOMETER, decisionMatrix[2][0]);
+        data.put(IOMeter_Data.IO_ACCELEROMETER, decisionMatrix[2][1]);
+        data.put(IOMeter_Data.IO_BATTERY, decisionMatrix[2][2]);
+        data.put(IOMeter_Data.IO_LIGHT, decisionMatrix[2][3]);
+        data.put(IOMeter_Data.IO_TELEPHONY, decisionMatrix[2][4]);
         getContentResolver().insert(IOMeter_Data.CONTENT_URI, data);
         contextProducer.onContext();
         Log.d("Status updated", "The device is: " + io_status.toString() + " with condifende " + overallConfidence);
 
+    }
+
+    private synchronized void setAlarm(Context context){
+        if(!alarmSet){
+            int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_IO_METER));
+            alarm.SetAlarm(context, interval_min);
+        }
     }
 
     protected static void lockOff(Context context, boolean lock) {
@@ -253,10 +266,11 @@ public class Plugin extends Aware_Plugin {
                         decisionMatrix[1][2] = 0.2;
                         break;
                 }
-                if (battery != null && battery.isClosed()) battery.close();
-
+                decisionMatrix[2][2] = (double)battery_status;
                 updateStatus();
             }
+
+            if (battery != null && battery.isClosed()) battery.close();
         }
     }
 
@@ -297,9 +311,7 @@ public class Plugin extends Aware_Plugin {
                     decisionMatrix[0][4] = 0;
                     decisionMatrix[1][4] = 0.7;
                 }
-                if (telephony != null && telephony.isClosed()) {
-                    telephony.close();
-                }
+                decisionMatrix[2][4] = (double)telephony_status;
                 updateStatus();
             }
 
@@ -315,11 +327,12 @@ public class Plugin extends Aware_Plugin {
     public class LightReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_LIGHT_METER));
+            int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_IO_METER));
             int samples = Integer.parseInt(Aware.getSetting(context, Settings.SAMPLES_LIGHT_METER));
             int light_counter = 0;
             double current_light_val = 0;
             double avg_light_val = 0;
+            lightReady = false;
 
             if (interval_min > 0 && !lockLight) {
 
@@ -333,7 +346,7 @@ public class Plugin extends Aware_Plugin {
                         light_counter += 1;
                     }
                 }
-
+                int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
                 if( light != null && !light.isClosed()) light.close();
 
                 lockLight = true;
@@ -356,8 +369,11 @@ public class Plugin extends Aware_Plugin {
                 Aware.setSetting(context, Aware_Preferences.STATUS_LIGHT, false);
                 Intent apply = new Intent(Aware.ACTION_AWARE_REFRESH);
                 context.sendBroadcast(apply);
+                decisionMatrix[2][3] = avg_light_val;
                 updateStatus();
-                alarm.SetAlarm(context, interval_min);
+                lightReady = true;
+                while(!magnetometerReady || ! accelerometerReady){}
+                setAlarm(context);
             }
         }
     }
@@ -365,12 +381,13 @@ public class Plugin extends Aware_Plugin {
     public class MagnetReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_MAGNETOMETER));
+            int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_IO_METER));
             int samples = Integer.parseInt(Aware.getSetting(context, Settings.SAMPLES_MAGNETOMETER));
             int magnet_counter = 0;
             double current_magnet_val = 0;
             double avg_magnet_val = 0;
             int avg_magnet = 0;
+            magnetometerReady = false;
 
             if (interval_min > 0 && !lockMagnetometer) {
                 Cursor magnetometer = getContentResolver().query(Magnetometer_Provider.Magnetometer_Data.CONTENT_URI,
@@ -391,24 +408,32 @@ public class Plugin extends Aware_Plugin {
                 lockMagnetometer = true;
                 avg_magnet = (int) (avg_magnet_val / magnet_counter);
 
-                if (avg_magnet <= 50) {
-                    Log.d("MagnetBroadcast", "Low magnetism, probably outside");
-                    decisionMatrix[0][0] = 0;
+                if (avg_magnet <= 48) {
+                    Log.d("MagnetBroadcast", "Low magnetism, probably inside");
+                    decisionMatrix[0][0] = 1;
                     decisionMatrix[1][0] = 0.8;
-                } else if (avg_magnet < 60) {
-                    Log.d("MagnetBroadcast", "Really high, magnetism probably nearby electric devices, therefore indoor");
+                } else if (avg_magnet > 48 && avg_magnet < 50) {
+                    Log.d("MagnetBroadcast", "Semindoor values, therefore indoor");
                     decisionMatrix[0][0] = 1;
                     decisionMatrix[1][0] = 0.6;
+                }  else if (avg_magnet >= 50 && avg_magnet < 60) {
+                    Log.d("MagnetBroadcast", "High magnetism, therefore outdoors");
+                    decisionMatrix[0][0] = 0;
+                    decisionMatrix[1][0] = 0.7;
                 } else {
-                    Log.d("MagnetBroadcast", "High magnetism, probably indoors");
+                    Log.d("MagnetBroadcast", "Really high magnetism, nearby electronic device therefore indoors");
                     decisionMatrix[0][0] = 1;
-                    decisionMatrix[1][0] = 0.8;
+                    decisionMatrix[1][0] = 0.4;
                 }
 
                 Aware.setSetting(context, Aware_Preferences.STATUS_MAGNETOMETER, false);
                 Intent apply = new Intent(Aware.ACTION_AWARE_REFRESH);
                 context.sendBroadcast(apply);
+                decisionMatrix[2][0] = avg_magnet;
                 updateStatus();
+                magnetometerReady = true;
+                while (!lightReady || !accelerometerReady){}
+                setAlarm(context);
             }
         }
     }
@@ -416,12 +441,13 @@ public class Plugin extends Aware_Plugin {
     public class AccelerometerReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_ACCELEROMETER));
+            int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_IO_METER));
             int samples = Integer.parseInt(Aware.getSetting(context, Settings.SAMPLES_ACCELEROMETER));
             int accelerometer_counter = 0;
             double current_accelerometer_val = 0;
             double avg_accelerometer_val = 0;
             double avg_accelerometer = 0;
+            accelerometerReady = false;
 
             if (interval_min > 0 && !lockAccelerometer) {
                 Cursor accelerometer = getContentResolver().query(Accelerometer_Provider.Accelerometer_Data.CONTENT_URI,
@@ -460,7 +486,11 @@ public class Plugin extends Aware_Plugin {
                 Aware.setSetting(context, Aware_Preferences.STATUS_ACCELEROMETER, false);
                 Intent apply = new Intent(Aware.ACTION_AWARE_REFRESH);
                 context.sendBroadcast(apply);
+                decisionMatrix[2][1] = avg_accelerometer;
                 updateStatus();
+                accelerometerReady = true;
+                while(!magnetometerReady || !lightReady){}
+                setAlarm(context);
             }
         }
     }

@@ -14,9 +14,7 @@ import android.preference.PreferenceManager;
 public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
     public static final String STATUS_PLUGIN_IO = "status_plugin_io";
-    public static final String FREQUENCY_LIGHT_METER = "frecuenty_light_meter";
-    public static final String FREQUENCY_MAGNETOMETER = "frecuenty_magnetometer";
-    public static final String FREQUENCY_ACCELEROMETER = "frecuenty_accelerometer";
+    public static final String FREQUENCY_IO_METER = "frecuenty_io_meter";
     public static final String SAMPLES_LIGHT_METER = "light_samples";
     public static final String SAMPLES_MAGNETOMETER = "magnet_samples";
     public static final String SAMPLES_ACCELEROMETER = "accelerometer_samples";

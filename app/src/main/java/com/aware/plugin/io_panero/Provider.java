@@ -20,7 +20,7 @@ import com.aware.utils.DatabaseHelper;
 
 public class Provider extends ContentProvider {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     /**
      * Provider authority: com.aware.plugin.io_panero.provider.io
@@ -43,6 +43,11 @@ public class Provider extends ContentProvider {
                     IOMeter_Data.DEVICE_ID + " text default ''," +
                     IOMeter_Data.IO_STATUS + " text default 'indoor'," +
                     IOMeter_Data.IO_CONFIDENCE + " real default 0," +
+                    IOMeter_Data.IO_MAGNETOMETER + " real default 0," +
+                    IOMeter_Data.IO_ACCELEROMETER + " real default 0," +
+                    IOMeter_Data.IO_BATTERY + " integer default 0," +
+                    IOMeter_Data.IO_LIGHT + " real default 0," +
+                    IOMeter_Data.IO_TELEPHONY + " real default 0," +
                     "UNIQUE("+IOMeter_Data.TIMESTAMP+","+IOMeter_Data.DEVICE_ID+")"
     };
 
@@ -57,7 +62,12 @@ public class Provider extends ContentProvider {
         public static final String TIMESTAMP = "timestamp";
         public static final String DEVICE_ID = "device_id";
         public static final String IO_STATUS = "io_status";
-        public static final String IO_CONFIDENCE= "double_io_confidence";
+        public static final String IO_CONFIDENCE = "double_io_confidence";
+        public static final String IO_MAGNETOMETER = "double_io_magnetometer";
+        public static final String IO_ACCELEROMETER = "double_io_accelerometer";
+        public static final String IO_BATTERY = "io_battery";
+        public static final String IO_LIGHT = "double_io_light";
+        public static final String IO_TELEPHONY = "double_io_telephony";
     }
 
     private static UriMatcher URIMatcher;
@@ -80,6 +90,11 @@ public class Provider extends ContentProvider {
         databaseMap.put(IOMeter_Data.DEVICE_ID, IOMeter_Data.DEVICE_ID);
         databaseMap.put(IOMeter_Data.IO_STATUS, IOMeter_Data.IO_STATUS);
         databaseMap.put(IOMeter_Data.IO_CONFIDENCE, IOMeter_Data.IO_CONFIDENCE);
+        databaseMap.put(IOMeter_Data.IO_MAGNETOMETER, IOMeter_Data.IO_MAGNETOMETER);
+        databaseMap.put(IOMeter_Data.IO_ACCELEROMETER, IOMeter_Data.IO_ACCELEROMETER);
+        databaseMap.put(IOMeter_Data.IO_BATTERY, IOMeter_Data.IO_BATTERY);
+        databaseMap.put(IOMeter_Data.IO_LIGHT, IOMeter_Data.IO_LIGHT);
+        databaseMap.put(IOMeter_Data.IO_TELEPHONY, IOMeter_Data.IO_TELEPHONY);
 
         return true;
     }
