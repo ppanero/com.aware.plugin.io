@@ -2,18 +2,18 @@
 <items version="2" >
 
     <item
+        jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.awareframework/aware-core/3.3.2/libs/zbar.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0a7b88ba1496a0b4af76069ad40dacd3897149e0">
+        <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/zbar-9ea0f9fcef0e563876d63a6f53f4e74a32b86ac2.jar" />
+    </item>
+    <item
         jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
         <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/classes-4769644e03172f74dedec015ee5723967276fce3.jar" />
-    </item>
-    <item
-        jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.awareframework/aware-core/3.3.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="ff842c198ae1c5b9bc6c82b28abf613eb0d1bb4d">
-        <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/classes-6a2aad379ea804bea6ad3874e956eb23639a41d9.jar" />
     </item>
     <item
         jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
@@ -23,13 +23,6 @@
         <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-b2dc41081e4a104e375c49a568371778c1131344.jar" />
     </item>
     <item
-        jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.awareframework/aware-core/3.3.0/libs/zbar.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0a7b88ba1496a0b4af76069ad40dacd3897149e0">
-        <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/zbar-36329d957a9b24babf15ca76602534aec9cc6b3b.jar" />
-    </item>
-    <item
         jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -37,18 +30,25 @@
         <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/classes-29a096115e1a43b676820db0b494befe97d95e7f.jar" />
     </item>
     <item
-        jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.awareframework/aware-core/3.3.0/libs/mqtt-client-0.4.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="02315d1759d01e52495e040e6e538aaa2e91c7f6">
-        <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/mqtt-client-0.4.0-59ac35511bed822c8157f8b070917703ac5cc4c9.jar" />
-    </item>
-    <item
         jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
         <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/classes-93a1abc0569fd1de75ace9e463ed588338f78acf.jar" />
+    </item>
+    <item
+        jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.awareframework/aware-core/3.3.2/libs/mqtt-client-0.4.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="02315d1759d01e52495e040e6e538aaa2e91c7f6">
+        <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/mqtt-client-0.4.0-6becec626e6dfa045c619caf199a2a284e45fa8d.jar" />
+    </item>
+    <item
+        jar="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/exploded-aar/com.awareframework/aware-core/3.3.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="5fd6691315c1289c0c36f8e512f1bf80e3d0124b">
+        <dex dex="/Users/Light/Workspace/aware-plugin-io/app/build/intermediates/pre-dexed/debug/classes-c3861dd477566332c1574e4cc35339f900a6eb3f.jar" />
     </item>
     <item
         jar="/Library/Android/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"

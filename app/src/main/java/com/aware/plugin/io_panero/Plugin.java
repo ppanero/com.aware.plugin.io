@@ -83,7 +83,7 @@ public class Plugin extends Aware_Plugin {
 
 
         if( Aware.getSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER).length() == 0 ) {
-            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER, 30);
+            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER, 200);
         }
 
         if( Aware.getSetting(getApplicationContext(), Settings.SAMPLES_MAGNETOMETER).length() == 0 ) {
@@ -153,7 +153,6 @@ public class Plugin extends Aware_Plugin {
         return START_STICKY;
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -207,7 +206,7 @@ public class Plugin extends Aware_Plugin {
         data.put(IOMeter_Data.IO_BATTERY, decisionMatrix[2][2]);
         data.put(IOMeter_Data.IO_LIGHT, decisionMatrix[2][3]);
         data.put(IOMeter_Data.IO_TELEPHONY, decisionMatrix[2][4]);
-        getContentResolver().insert(IOMeter_Data.CONTENT_URI, data);
+        //getContentResolver().insert(IOMeter_Data.CONTENT_URI, data);
         contextProducer.onContext();
         Log.d("Status updated", "The device is: " + io_status.toString() + " with condifende " + overallConfidence);
 
@@ -218,6 +217,22 @@ public class Plugin extends Aware_Plugin {
             int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_IO_METER));
             alarm.SetAlarm(context, interval_min);
         }
+    }
+
+    private synchronized void setReady(boolean sensor, boolean value){
+        sensor = value;
+    }
+
+    private  synchronized  boolean getMagnetReady(){
+        return magnetometerReady;
+    }
+
+    private  synchronized boolean getLightReady(){
+        return lightReady;
+    }
+
+    private synchronized boolean getAccelerometerReady(){
+        return accelerometerReady;
     }
 
     protected static void lockOff(Context context, boolean lock) {
@@ -332,7 +347,7 @@ public class Plugin extends Aware_Plugin {
             int light_counter = 0;
             double current_light_val = 0;
             double avg_light_val = 0;
-            lightReady = false;
+            setReady(lightReady, false);
 
             if (interval_min > 0 && !lockLight) {
 
@@ -371,8 +386,8 @@ public class Plugin extends Aware_Plugin {
                 context.sendBroadcast(apply);
                 decisionMatrix[2][3] = avg_light_val;
                 updateStatus();
-                lightReady = true;
-                while(!magnetometerReady || ! accelerometerReady){}
+                setReady(lightReady, true);
+                while(!getMagnetReady() || !getAccelerometerReady()){}
                 setAlarm(context);
             }
         }
@@ -387,7 +402,7 @@ public class Plugin extends Aware_Plugin {
             double current_magnet_val = 0;
             double avg_magnet_val = 0;
             int avg_magnet = 0;
-            magnetometerReady = false;
+            setReady(magnetometerReady, false);
 
             if (interval_min > 0 && !lockMagnetometer) {
                 Cursor magnetometer = getContentResolver().query(Magnetometer_Provider.Magnetometer_Data.CONTENT_URI,
@@ -431,8 +446,8 @@ public class Plugin extends Aware_Plugin {
                 context.sendBroadcast(apply);
                 decisionMatrix[2][0] = avg_magnet;
                 updateStatus();
-                magnetometerReady = true;
-                while (!lightReady || !accelerometerReady){}
+                setReady(magnetometerReady, true);
+                while (!getLightReady() || !getAccelerometerReady()){}
                 setAlarm(context);
             }
         }
@@ -447,7 +462,7 @@ public class Plugin extends Aware_Plugin {
             double current_accelerometer_val = 0;
             double avg_accelerometer_val = 0;
             double avg_accelerometer = 0;
-            accelerometerReady = false;
+            setReady(accelerometerReady, false);
 
             if (interval_min > 0 && !lockAccelerometer) {
                 Cursor accelerometer = getContentResolver().query(Accelerometer_Provider.Accelerometer_Data.CONTENT_URI,
@@ -488,8 +503,8 @@ public class Plugin extends Aware_Plugin {
                 context.sendBroadcast(apply);
                 decisionMatrix[2][1] = avg_accelerometer;
                 updateStatus();
-                accelerometerReady = true;
-                while(!magnetometerReady || !lightReady){}
+                setReady(accelerometerReady, true);
+                while(!getMagnetReady() || !getLightReady()){}
                 setAlarm(context);
             }
         }
