@@ -33,8 +33,6 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
         //Make sure to load the latest values
         CheckBoxPreference status = (CheckBoxPreference) findPreference(STATUS_PLUGIN_IO);
         status.setChecked(Aware.getSetting(this, STATUS_PLUGIN_IO).equals("true"));
-
-        //...
     }
 
     @Override

@@ -20,7 +20,7 @@ import com.aware.utils.DatabaseHelper;
 
 public class Provider extends ContentProvider {
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
     /**
      * Provider authority: com.aware.plugin.io_panero.provider.io

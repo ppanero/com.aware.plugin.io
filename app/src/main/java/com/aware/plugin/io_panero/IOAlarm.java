@@ -14,7 +14,7 @@ public class IOAlarm extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Plugin.alarmSet = false;
+        //Plugin.alarmSet = false;
         Aware.setSetting(context, Aware_Preferences.STATUS_LIGHT, true);
         Aware.setSetting(context, Aware_Preferences.STATUS_ACCELEROMETER, true);
         Aware.setSetting(context, Aware_Preferences.STATUS_MAGNETOMETER, true);
@@ -27,7 +27,7 @@ public class IOAlarm extends BroadcastReceiver {
 
     public void SetAlarm(Context context, int interval) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Plugin.alarmSet = true;
+        //Plugin.alarmSet = true;
         Intent i = new Intent(context, IOAlarm.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
         //interval must come in minutes

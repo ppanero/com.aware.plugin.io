@@ -24,10 +24,10 @@ public class ContextCard implements IContextCard {
     private Context sContext;
 
     //Set how often your card needs to refresh if the stream is visible (in milliseconds)
-    private int alarm_frequency = Integer.parseInt(Aware.getSetting(sContext.getApplicationContext(), Settings.FREQUENCY_IO_METER));
-    private int time_offset = 30 * 1000;
-    private int refresh_interval =  (alarm_frequency * 60 * 1000) + time_offset; //1 second = 1000 milliseconds
-
+    //private int alarm_frequency = Integer.parseInt(Aware.getSetting(sContext.getApplicationContext(), Settings.FREQUENCY_IO_METER));
+    //private int time_offset = 30 * 1000;
+    //private int refresh_interval =  (alarm_frequency * 60 * 1000) + time_offset; //1 second = 1000 milliseconds
+    private int refresh_interval =  90 * 1000; //1 second = 1000 milliseconds
 
     //Declare here all the UI elements you'll be accessing
     private View card;
@@ -49,7 +49,7 @@ public class ContextCard implements IContextCard {
             //Modify card's content here once it's initialized
             if( card != null ) {
                 //Modify card's content
-                Cursor ioMeter = sContext.getContentResolver().query(Provider.IOMeter_Data.CONTENT_URI,
+               Cursor ioMeter = sContext.getContentResolver().query(Provider.IOMeter_Data.CONTENT_URI,
                         null, null, null, Provider.IOMeter_Data.TIMESTAMP + " DESC LIMIT 1");
                 if (ioMeter != null && ioMeter.moveToFirst()) {
                     double io_confidence = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_CONFIDENCE));
@@ -96,7 +96,7 @@ public class ContextCard implements IContextCard {
         io_light_text = (TextView) card.findViewById(R.id.io_light);
         io_telephony_text = (TextView) card.findViewById(R.id.io_gsm_strength);
         //Modify card's content
-        /*Cursor ioMeter = sContext.getContentResolver().query(Provider.IOMeter_Data.CONTENT_URI,
+        Cursor ioMeter = sContext.getContentResolver().query(Provider.IOMeter_Data.CONTENT_URI,
                 null, null, null, Provider.IOMeter_Data.TIMESTAMP + " DESC LIMIT 1");
         if (ioMeter != null && ioMeter.moveToFirst()) {
             double io_confidence = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_CONFIDENCE));
@@ -114,7 +114,7 @@ public class ContextCard implements IContextCard {
             io_light_text.setText("Light: " + io_light);
             io_telephony_text.setText("GSM Strength: " + io_telephony);
         }
-        if( ioMeter != null && !ioMeter.isClosed()) ioMeter.close();*/
+        if( ioMeter != null && !ioMeter.isClosed()) ioMeter.close();
 
         //Begin refresh cycle
         uiRefresher.post(uiChanger);
