@@ -246,14 +246,14 @@ public class Plugin extends Aware_Plugin {
                 switch (battery_status) {
                     //case BatteryManager.BATTERY_PLUGGED_AC:
                     case 1:
-                        Log.d("BatteryObserver", "Battery plugged to AC");
+                        if (DEBUG) Log.d("BatteryObserver", "Battery plugged to AC");
                         decisionMatrix[0][2] = 1;
                         decisionMatrix[1][2] = 0.9;
                         break;
 
                     //case BatteryManager.BATTERY_PLUGGED_USB:
                     case 2:
-                        Log.d("BatteryObserver", "Battery plugged to USB");
+                        if (DEBUG) Log.d("BatteryObserver", "Battery plugged to USB");
                         decisionMatrix[0][2] = 1;
                         decisionMatrix[1][2] = 0.8;
                         break;
@@ -283,23 +283,23 @@ public class Plugin extends Aware_Plugin {
                 int telephony_status = telephony.getInt(telephony.getColumnIndex(Telephony_Provider.GSM_Data.SIGNAL_STRENGTH));
 
                 if (telephony_status <= 2) {
-                    Log.d("TelephonyObserver", "Really low, somewhere in the country side");
+                    if (DEBUG) Log.d("TelephonyObserver", "Really low, somewhere in the country side");
                     decisionMatrix[0][4] = 0;
                     decisionMatrix[1][4] = 0.3;
                 } else if (telephony_status > 2 && telephony_status <= 10) {
-                    Log.d("TelephonyObserver", "Quite low, big building with too much interference");
+                    if (DEBUG) Log.d("TelephonyObserver", "Quite low, big building with too much interference");
                     decisionMatrix[0][4] = 1;
                     decisionMatrix[1][4] = 0.3;
                 } else if (telephony_status > 10 && telephony_status <= 25) {
-                    Log.d("TelephonyObserver", "Most common values inside a building");
+                    if (DEBUG) Log.d("TelephonyObserver", "Most common values inside a building");
                     decisionMatrix[0][4] = 1;
                     decisionMatrix[1][4] = 0.6;
                 } else if (telephony_status > 25 && telephony_status <= 28) {
-                    Log.d("TelephonyObserver", "Quite high, probably inside a building without intereference");
+                    if (DEBUG) Log.d("TelephonyObserver", "Quite high, probably inside a building without intereference");
                     decisionMatrix[0][4] = 1;
                     decisionMatrix[1][5] = 0.4;
                 } else {
-                    Log.d("TelephonyObserver", "Really high, probably outside near a cell tower");
+                    if (DEBUG) Log.d("TelephonyObserver", "Really high, probably outside near a cell tower");
                     decisionMatrix[0][4] = 0;
                     decisionMatrix[1][4] = 0.7;
                 }
@@ -362,19 +362,19 @@ public class Plugin extends Aware_Plugin {
                     }
 
                     if (avg_light_val <= 200) {
-                        Log.d("LightBroadcast", "lower than 200");
+                        if (DEBUG) Log.d("LightBroadcast", "lower than 200");
                         decisionMatrix[0][3] = low_value;
                         decisionMatrix[1][3] = 0.8 * hour_weight;
                     } else if (avg_light_val > 200 && avg_light_val <= 500) {
-                        Log.d("LightBroadcast", "between 200 and 500");
+                        if (DEBUG) Log.d("LightBroadcast", "between 200 and 500");
                         decisionMatrix[0][3] = low_value;
                         decisionMatrix[1][3] = 0.6 * hour_weight;
                     } else if (avg_light_val > 500 && avg_light_val <= 800) {
-                        Log.d("LightBroadcast", "between 200 and 500");
+                        if (DEBUG) Log.d("LightBroadcast", "between 200 and 500");
                         decisionMatrix[0][3] = low_value;
                         decisionMatrix[1][3] = 0.7 * hour_weight;
                     } else {
-                        Log.d("LightBroadcast", "higher than 500");
+                        if (DEBUG) Log.d("LightBroadcast", "higher than 500");
                         decisionMatrix[0][3] = high_value;
                         decisionMatrix[1][3] = 0.8 * hour_weight;
                     }
@@ -396,16 +396,22 @@ public class Plugin extends Aware_Plugin {
             int samples = Integer.parseInt(Aware.getSetting(context, Settings.SAMPLES_MAGNETOMETER));
 
             if (interval_min > 0 && !lockMagnetometer) {
-                Cursor magnetometer = getContentResolver().query(Magnetometer_Provider.Magnetometer_Data.CONTENT_URI,
-                        null, null, null, Magnetometer_Provider.Magnetometer_Data.TIMESTAMP + " DESC LIMIT 1");
-                if(magnet_counter < samples && magnetometer != null && magnetometer.moveToFirst()) {
-                    double value_x = magnetometer.getDouble(magnetometer.getColumnIndex(Magnetometer_Provider.Magnetometer_Data.VALUES_0));
-                    double value_y = magnetometer.getDouble(magnetometer.getColumnIndex(Magnetometer_Provider.Magnetometer_Data.VALUES_1));
-                    double value_z = magnetometer.getDouble(magnetometer.getColumnIndex(Magnetometer_Provider.Magnetometer_Data.VALUES_2));
+                ContentValues values = (ContentValues) intent.getExtras().get(Magnetometer.EXTRA_DATA);
+
+                /*Cursor magnetometer = getContentResolver().query(Magnetometer_Provider.Magnetometer_Data.CONTENT_URI,
+                        null, null, null, Magnetometer_Provider.Magnetometer_Data.TIMESTAMP + " DESC LIMIT 1");*/
+                if(magnet_counter < samples){// && magnetometer != null && magnetometer.moveToFirst()) {
+                    //double value_x = magnetometer.getDouble(magnetometer.getColumnIndex(Magnetometer_Provider.Magnetometer_Data.VALUES_0));
+                    //double value_y = magnetometer.getDouble(magnetometer.getColumnIndex(Magnetometer_Provider.Magnetometer_Data.VALUES_1));
+                    //double value_z = magnetometer.getDouble(magnetometer.getColumnIndex(Magnetometer_Provider.Magnetometer_Data.VALUES_2));
+                    double value_x = Double.parseDouble(values.get(Magnetometer_Provider.Magnetometer_Data.VALUES_0).toString());
+                    double value_y = Double.parseDouble(values.get(Magnetometer_Provider.Magnetometer_Data.VALUES_1).toString());
+                    double value_z = Double.parseDouble(values.get(Magnetometer_Provider.Magnetometer_Data.VALUES_2).toString());
                     current_magnet_val = Math.sqrt(Math.pow(value_x, 2) + Math.pow(value_y, 2) + Math.pow(value_z, 2));
                     avg_magnet_val += current_magnet_val;
                     magnet_counter += 1;
-                    if (magnetometer != null && !magnetometer.isClosed()) magnetometer.close();
+                    if (DEBUG) Log.d("MagnetBroadcast", "current: " + avg_magnet_val + magnet_counter);
+                    //if (magnetometer != null && !magnetometer.isClosed()) magnetometer.close();
                 }
                 else {
                     lockMagnetometer = true;
@@ -413,19 +419,19 @@ public class Plugin extends Aware_Plugin {
                         avg_magnet = (int) (avg_magnet_val / magnet_counter);
                     }
                     if (avg_magnet <= 47) {
-                        Log.d("MagnetBroadcast", "Low magnetism, probably inside");
+                        if (DEBUG) Log.d("MagnetBroadcast", "Low magnetism, probably inside");
                         decisionMatrix[0][0] = 1;
                         decisionMatrix[1][0] = 0.8;
                     } else if (avg_magnet > 47 && avg_magnet < 52) {
-                        Log.d("MagnetBroadcast", "Semindoor values, therefore indoor");
+                        if (DEBUG) Log.d("MagnetBroadcast", "Semindoor values, therefore indoor");
                         decisionMatrix[0][0] = 1;
                         decisionMatrix[1][0] = 0.6;
                     } else if (avg_magnet >= 52 && avg_magnet < 60) {
-                        Log.d("MagnetBroadcast", "High magnetism, therefore outdoors");
+                        if (DEBUG) Log.d("MagnetBroadcast", "High magnetism, therefore outdoors");
                         decisionMatrix[0][0] = 0;
                         decisionMatrix[1][0] = 0.7;
                     } else {
-                        Log.d("MagnetBroadcast", "Really high magnetism, nearby electronic device therefore indoors");
+                        if (DEBUG) Log.d("MagnetBroadcast", "Really high magnetism, nearby electronic device therefore indoors");
                         decisionMatrix[0][0] = 1;
                         decisionMatrix[1][0] = 0.5;
                     }
@@ -464,11 +470,11 @@ public class Plugin extends Aware_Plugin {
                     }
 
                     if (avg_accelerometer <= 2) {
-                        Log.d("AccelerometerBroadcast", "Still, different due to possible noise hence indoor");
+                        if (DEBUG) Log.d("AccelerometerBroadcast", "Still, different due to possible noise hence indoor");
                         decisionMatrix[0][1] = 1;
                         decisionMatrix[1][1] = 0.2;
                     } else if (avg_accelerometer > 2 && avg_accelerometer <= 20) {
-                        Log.d("AccelerometerBroadcast", "Walking, biking, or running, hence outdoor");
+                        if (DEBUG) Log.d("AccelerometerBroadcast", "Walking, biking, or running, hence outdoor");
                         decisionMatrix[0][1] = 0;
                         decisionMatrix[1][1] = 0.5;
                     }
