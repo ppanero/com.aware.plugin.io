@@ -12,37 +12,43 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Confidence: initializing"
-            android:id="@+id/io_confidence" android:textColor="#ff000000"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Elapsed time: initializing"
+            android:id="@+id/io_elapsed_time" android:textColor="#ff000000"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Last update: initializing"
+            android:id="@+id/io_last_update" android:textColor="#ff000000"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Accelerometer: initializing"
             android:id="@+id/io_accelerometer" android:textColor="#ff000000"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Magnetometer: initializing"
             android:id="@+id/io_magnetometer" android:textColor="#ff000000"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Light: initializing"
             android:id="@+id/io_light" android:textColor="#ff000000"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Battery: initializing"
             android:id="@+id/io_battery" android:textColor="#ff000000"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="GPS accuracy: initializing"
             android:id="@+id/io_gps_accuracy" android:textColor="#ff000000"/>
 </LinearLayout>
