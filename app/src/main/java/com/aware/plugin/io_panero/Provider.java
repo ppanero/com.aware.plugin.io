@@ -63,13 +63,13 @@ public class Provider extends ContentProvider {
         public static final String TIMESTAMP = "timestamp";
         public static final String DEVICE_ID = "device_id";
         public static final String IO_STATUS = "io_status";
-        public static final String IO_ELAPSED_TIME = "io_confidence";
-        public static final String IO_LAST_UPDATE = "io_last_update";
-        public static final String IO_MAGNETOMETER = "double_io_magnetometer";
-        public static final String IO_ACCELEROMETER = "double_io_accelerometer";
-        public static final String IO_BATTERY = "io_battery";
-        public static final String IO_LIGHT = "double_io_light";
-        public static final String IO_GPS = "double_io_gps";
+        public static final String IO_ELAPSED_TIME = "elapsed_time";
+        public static final String IO_LAST_UPDATE = "last_update";
+        public static final String IO_MAGNETOMETER = "double_magnetometer";
+        public static final String IO_ACCELEROMETER = "double_accelerometer";
+        public static final String IO_BATTERY = "battery";
+        public static final String IO_LIGHT = "double_light";
+        public static final String IO_GPS = "double_gps";
     }
 
     private static UriMatcher URIMatcher;
