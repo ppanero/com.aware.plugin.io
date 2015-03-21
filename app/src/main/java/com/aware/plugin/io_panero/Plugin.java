@@ -3,8 +3,13 @@ package com.aware.plugin.io_panero;
 import android.content.*;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.aware.*;
@@ -31,7 +36,7 @@ public class Plugin extends Aware_Plugin {
         2:=Accelerometer
         3:=Battery
         4:=Light
-        5:=Telephony
+        5:=GPS
     The first columns will have either 1 (indoor) or 0 (outdoor).
     The second column will have the confidence of the sensor in that precise moment,
     therefor it will change in time.
@@ -40,7 +45,7 @@ public class Plugin extends Aware_Plugin {
     private static final int NUMBER_OF_SENSORS = 5;
     private static double[][] decisionMatrix = new double[3][5]; //{{0,0},{0,0},{0,0},{0,0},{0,0}};
     private static BatteryObserver batteryObserver;
-    private static TelephonyObserver telephonyObserver;
+    private static LocationObserver locationObserver;
     private LightReceiver lightReceiver = new LightReceiver();
     private MagnetReceiver magnetReceiver = new MagnetReceiver();
     private AccelerometerReceiver accelerometerReceiver = new AccelerometerReceiver();
@@ -64,6 +69,9 @@ public class Plugin extends Aware_Plugin {
     private double current_accelerometer_val = 0;
     private double avg_accelerometer_val = 0;
     private double avg_accelerometer = 0;
+    /*private boolean isGPSFix = false;
+    private long mLastLocationMillis = 0;
+    private Location mLastLocation = null;*/
 
 
     @Override
@@ -82,7 +90,7 @@ public class Plugin extends Aware_Plugin {
         }
 
         if( Aware.getSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER).length() == 0 ) {
-            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER, 200);
+            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER, 20);
         }
 
         if( Aware.getSetting(getApplicationContext(), Settings.SAMPLES_MAGNETOMETER).length() == 0 ) {
@@ -98,13 +106,13 @@ public class Plugin extends Aware_Plugin {
         }
 
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_BATTERY, true);
-        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_TELEPHONY, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_MAGNETOMETER, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.FREQUENCY_MAGNETOMETER, 200000);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ACCELEROMETER, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.FREQUENCY_ACCELEROMETER, 200000);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_LIGHT, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.FREQUENCY_LIGHT, 1000);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_LOCATION_GPS, true);
 
         contextProducer = new ContextProducer() {
             @Override
@@ -121,8 +129,8 @@ public class Plugin extends Aware_Plugin {
         batteryObserver = new BatteryObserver(new Handler());
         getContentResolver().registerContentObserver(Battery_Provider.Battery_Data.CONTENT_URI, true, batteryObserver);
 
-        telephonyObserver = new TelephonyObserver(new Handler());
-        getContentResolver().registerContentObserver(Telephony_Provider.Telephony_Data.CONTENT_URI, true, telephonyObserver);
+        locationObserver = new LocationObserver(new Handler());
+        getContentResolver().registerContentObserver(Locations_Provider.Locations_Data.CONTENT_URI, true, locationObserver);
 
         IntentFilter lightFilter = new IntentFilter();
         lightFilter.addAction(Light.ACTION_AWARE_LIGHT);
@@ -169,10 +177,10 @@ public class Plugin extends Aware_Plugin {
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_BATTERY, false);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ACCELEROMETER, false);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_LIGHT, false);
-        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_TELEPHONY, false);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_LOCATION_GPS, false);
 
         getContentResolver().unregisterContentObserver(batteryObserver);
-        getContentResolver().unregisterContentObserver(telephonyObserver);
+        getContentResolver().unregisterContentObserver(locationObserver);
         unregisterReceiver(lightReceiver);
         unregisterReceiver(magnetReceiver);
         unregisterReceiver(accelerometerReceiver);
@@ -212,7 +220,7 @@ public class Plugin extends Aware_Plugin {
         data.put(IOMeter_Data.IO_ACCELEROMETER, decisionMatrix[2][1]);
         data.put(IOMeter_Data.IO_BATTERY, decisionMatrix[2][2]);
         data.put(IOMeter_Data.IO_LIGHT, decisionMatrix[2][3]);
-        data.put(IOMeter_Data.IO_TELEPHONY, decisionMatrix[2][4]);
+        data.put(IOMeter_Data.IO_GPS, decisionMatrix[2][4]);
         getContentResolver().insert(IOMeter_Data.CONTENT_URI, data);
         contextProducer.onContext();
         if (DEBUG) Log.d("Status updated", "The device is: " + io_status.toString() + " with confifende " + overallConfidence);
@@ -224,8 +232,8 @@ public class Plugin extends Aware_Plugin {
     }
 
     /*
-    Battery and telephony are made as observers, because changes they are not expensive in power consumption.
-    Also changes are less frequent (above all in battery).
+    Battery is made as an observer, because changes are not expensive in power consumption.
+    Also changes are less frequent.
      */
     public class BatteryObserver extends ContentObserver {
 
@@ -266,9 +274,9 @@ public class Plugin extends Aware_Plugin {
         }
     }
 
-    public class TelephonyObserver extends ContentObserver {
+    public class LocationObserver extends ContentObserver {
 
-        public TelephonyObserver(Handler handler) {
+        public LocationObserver(Handler handler) {
             super(handler);
         }
 
@@ -277,40 +285,28 @@ public class Plugin extends Aware_Plugin {
             super.onChange(selfChange);
 
             //Get the latest recorded value
-            Cursor telephony = getContentResolver().query(Telephony_Provider.GSM_Data.CONTENT_URI,
-                    null, null, null, Telephony_Provider.GSM_Data.TIMESTAMP + " DESC LIMIT 1");
-            if (telephony != null && telephony.moveToFirst()) {
-                int telephony_status = telephony.getInt(telephony.getColumnIndex(Telephony_Provider.GSM_Data.SIGNAL_STRENGTH));
+            Cursor location = getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI,
+                    null, null, null, Locations_Provider.Locations_Data.TIMESTAMP + " DESC LIMIT 1");
+            if (location != null && location.moveToFirst()) {
+                int accuracy = location.getInt(location.getColumnIndex(Locations_Provider.Locations_Data.ACCURACY));
 
-                if (telephony_status <= 2) {
-                    if (DEBUG) Log.d("TelephonyObserver", "Really low, somewhere in the country side");
-                    decisionMatrix[0][4] = 0;
-                    decisionMatrix[1][4] = 0.3;
-                } else if (telephony_status > 2 && telephony_status <= 10) {
-                    if (DEBUG) Log.d("TelephonyObserver", "Quite low, big building with too much interference");
-                    decisionMatrix[0][4] = 1;
-                    decisionMatrix[1][4] = 0.3;
-                } else if (telephony_status > 10 && telephony_status <= 25) {
-                    if (DEBUG) Log.d("TelephonyObserver", "Most common values inside a building");
-                    decisionMatrix[0][4] = 1;
-                    decisionMatrix[1][4] = 0.6;
-                } else if (telephony_status > 25 && telephony_status <= 28) {
-                    if (DEBUG) Log.d("TelephonyObserver", "Quite high, probably inside a building without intereference");
-                    decisionMatrix[0][4] = 1;
-                    decisionMatrix[1][5] = 0.4;
-                } else {
-                    if (DEBUG) Log.d("TelephonyObserver", "Really high, probably outside near a cell tower");
-                    decisionMatrix[0][4] = 0;
-                    decisionMatrix[1][4] = 0.7;
+                if(accuracy < 30){
+                    if (DEBUG) Log.d("LocationObserver", "low accuracy");
+                    decisionMatrix[0][1] = 0;
+                    decisionMatrix[1][1] = 0.6;
                 }
-                decisionMatrix[2][4] = (double)telephony_status;
+                else{
+                    if (DEBUG) Log.d("LocationObserver", "high accuracy");
+                    decisionMatrix[0][1] = 1;
+                    decisionMatrix[1][1] = 0.4;
+                }
+                decisionMatrix[2][4] = accuracy;
                 updateStatus();
             }
 
-            if( telephony != null && !telephony.isClosed()) telephony.close();
+            if (location != null && location.isClosed()) location.close();
         }
     }
-
     /*
     Magnetometer, accelerometer and light are turn on with an alarm, due to its power consumption.
     Also, it helps getting less data to analyse more carefully.
@@ -325,13 +321,8 @@ public class Plugin extends Aware_Plugin {
             if (interval_min > 0 && !lockLight) {
                 ContentValues values = (ContentValues) intent.getExtras().get(Light.EXTRA_DATA);
                 current_light_val = Double.parseDouble(values.get(Light_Provider.Light_Data.LIGHT_LUX).toString());
-                /*Cursor light = getContentResolver().query(Light_Provider.Light_Data.CONTENT_URI,
-                        null, null, null, Light_Provider.Light_Data.TIMESTAMP + " DESC LIMIT 1");*/
-                if(light_counter < samples){// && light != null && light.moveToFirst()) {
-                    //current_light_val = light.getDouble(light.getColumnIndex(Light_Provider.Light_Data.LIGHT_LUX));
-                    avg_light_val += current_light_val;
+                if(light_counter < samples){avg_light_val += current_light_val;
                     light_counter += 1;
-                    //if (light != null && !light.isClosed()) light.close();
                 }
                 else {
                     double hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -396,14 +387,9 @@ public class Plugin extends Aware_Plugin {
             int samples = Integer.parseInt(Aware.getSetting(context, Settings.SAMPLES_MAGNETOMETER));
 
             if (interval_min > 0 && !lockMagnetometer) {
-                ContentValues values = (ContentValues) intent.getExtras().get(Magnetometer.EXTRA_DATA);
 
-                /*Cursor magnetometer = getContentResolver().query(Magnetometer_Provider.Magnetometer_Data.CONTENT_URI,
-                        null, null, null, Magnetometer_Provider.Magnetometer_Data.TIMESTAMP + " DESC LIMIT 1");*/
-                if(magnet_counter < samples){// && magnetometer != null && magnetometer.moveToFirst()) {
-                    //double value_x = magnetometer.getDouble(magnetometer.getColumnIndex(Magnetometer_Provider.Magnetometer_Data.VALUES_0));
-                    //double value_y = magnetometer.getDouble(magnetometer.getColumnIndex(Magnetometer_Provider.Magnetometer_Data.VALUES_1));
-                    //double value_z = magnetometer.getDouble(magnetometer.getColumnIndex(Magnetometer_Provider.Magnetometer_Data.VALUES_2));
+                ContentValues values = (ContentValues) intent.getExtras().get(Magnetometer.EXTRA_DATA);
+                if(magnet_counter < samples){
                     double value_x = Double.parseDouble(values.get(Magnetometer_Provider.Magnetometer_Data.VALUES_0).toString());
                     double value_y = Double.parseDouble(values.get(Magnetometer_Provider.Magnetometer_Data.VALUES_1).toString());
                     double value_z = Double.parseDouble(values.get(Magnetometer_Provider.Magnetometer_Data.VALUES_2).toString());
@@ -411,7 +397,6 @@ public class Plugin extends Aware_Plugin {
                     avg_magnet_val += current_magnet_val;
                     magnet_counter += 1;
                     if (DEBUG) Log.d("MagnetBroadcast", "current: " + avg_magnet_val + magnet_counter);
-                    //if (magnetometer != null && !magnetometer.isClosed()) magnetometer.close();
                 }
                 else {
                     lockMagnetometer = true;
@@ -452,16 +437,15 @@ public class Plugin extends Aware_Plugin {
             int samples = Integer.parseInt(Aware.getSetting(context, Settings.SAMPLES_ACCELEROMETER));
 
             if (interval_min > 0 && !lockAccelerometer) {
-                Cursor accelerometer = getContentResolver().query(Accelerometer_Provider.Accelerometer_Data.CONTENT_URI,
-                        null, null, null, Accelerometer_Provider.Accelerometer_Data.TIMESTAMP + " DESC LIMIT 1");
-                if (accelerometer_counter < samples && accelerometer != null && accelerometer.moveToFirst()) {
-                    double value_x = accelerometer.getDouble(accelerometer.getColumnIndex(Accelerometer_Provider.Accelerometer_Data.VALUES_0));
-                    double value_y = accelerometer.getDouble(accelerometer.getColumnIndex(Accelerometer_Provider.Accelerometer_Data.VALUES_1));
-                    double value_z = accelerometer.getDouble(accelerometer.getColumnIndex(Accelerometer_Provider.Accelerometer_Data.VALUES_2));
+
+                ContentValues values = (ContentValues) intent.getExtras().get(Accelerometer.EXTRA_DATA);
+                if (accelerometer_counter < samples) {
+                    double value_x = Double.parseDouble(values.get(Accelerometer_Provider.Accelerometer_Data.VALUES_0).toString());
+                    double value_y = Double.parseDouble(values.get(Accelerometer_Provider.Accelerometer_Data.VALUES_1).toString());
+                    double value_z = Double.parseDouble(values.get(Accelerometer_Provider.Accelerometer_Data.VALUES_2).toString());
                     current_accelerometer_val = Math.sqrt(Math.pow(value_x, 2) + Math.pow(value_y, 2) + Math.pow(value_z, 2));
                     avg_accelerometer_val += current_accelerometer_val;
                     accelerometer_counter += 1;
-                    if (accelerometer != null && !accelerometer.isClosed()) accelerometer.close();
                 }
                 else {
                     lockAccelerometer = true;
@@ -487,4 +471,60 @@ public class Plugin extends Aware_Plugin {
             }
         }
     }
+
+    /*
+    Listener to know if the Gps get a fix
+     */
+    /*public class MyGPSListener implements GpsStatus.Listener, LocationListener {
+        public void onGpsStatusChanged(int event) {
+            if (DEBUG) Log.d("GPS Listener", "GPS event");
+            switch (event) {
+                case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                    if (mLastLocation != null)
+                        isGPSFix = (SystemClock.elapsedRealtime() - mLastLocationMillis) < 3000;
+
+                    if (isGPSFix) { // A fix has been acquired.
+                        if(mLastLocation.hasAccuracy()){
+                            float accuracy = mLastLocation.getAccuracy();
+                            if (DEBUG) Log.d("GPS Listener", "GPS accuracy " + accuracy);
+                            if(accuracy < 30){
+                                decisionMatrix[0][1] = 0;
+                                decisionMatrix[1][1] = 0.6;
+                            }
+                            else{
+                                decisionMatrix[0][1] = 1;
+                                decisionMatrix[1][1] = 0.4;
+                            }
+                            decisionMatrix[2][4] = accuracy;
+                        }
+                    } else { // The fix has been lost.
+                        decisionMatrix[0][1] = 0;
+                        decisionMatrix[1][1] = 0.4;
+                    }
+
+                    break;
+                case GpsStatus.GPS_EVENT_FIRST_FIX:
+                    isGPSFix = true;
+                    break;
+            }
+        }
+        @Override
+         public void onLocationChanged(Location location) {
+            if (location == null) return;
+            mLastLocationMillis = SystemClock.elapsedRealtime();
+            mLastLocation = location;
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+    }*/
 }

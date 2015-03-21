@@ -37,7 +37,7 @@ public class ContextCard implements IContextCard {
     private TextView io_accelerometer_text;
     private TextView io_battery_text;
     private TextView io_light_text;
-    private TextView io_telephony_text;
+    private TextView io_gps_text;
 
     //Used to load your context card
     private LayoutInflater sInflater;
@@ -58,14 +58,14 @@ public class ContextCard implements IContextCard {
                     double io_accelerometer = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_ACCELEROMETER));
                     int io_battery = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_BATTERY));
                     double io_light = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_LIGHT));
-                    double io_telephony = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_TELEPHONY));
+                    double io_gps = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_GPS));
                     io_status_text.setText("IO Status: " + io_status);
                     io_confidence_text.setText("IO Confidence: " + io_confidence);
                     io_magnetometer_text.setText("Magnetometer: " + io_magnetometer);
                     io_accelerometer_text.setText("Accelerometer: " + io_accelerometer);
                     io_battery_text.setText("Battery: " + io_battery);
                     io_light_text.setText("Light: " + io_light);
-                    io_telephony_text.setText("GSM Strength: " + io_telephony);
+                    io_gps_text.setText("GPS accuracy: " + io_gps);
                 }
                 if( ioMeter != null && !ioMeter.isClosed()) ioMeter.close();
             }
@@ -94,7 +94,7 @@ public class ContextCard implements IContextCard {
         io_accelerometer_text = (TextView) card.findViewById(R.id.io_accelerometer);
         io_battery_text = (TextView) card.findViewById(R.id.io_battery);
         io_light_text = (TextView) card.findViewById(R.id.io_light);
-        io_telephony_text = (TextView) card.findViewById(R.id.io_gsm_strength);
+        io_gps_text = (TextView) card.findViewById(R.id.io_gps_accuracy);
         //Modify card's content
         Cursor ioMeter = sContext.getContentResolver().query(Provider.IOMeter_Data.CONTENT_URI,
                 null, null, null, Provider.IOMeter_Data.TIMESTAMP + " DESC LIMIT 1");
@@ -105,14 +105,14 @@ public class ContextCard implements IContextCard {
             double io_accelerometer = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_ACCELEROMETER));
             int io_battery = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_BATTERY));
             double io_light = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_LIGHT));
-            double io_telephony = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_TELEPHONY));
+            double io_gps = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_GPS));
             io_status_text.setText("IO Status: " + io_status);
             io_confidence_text.setText("IO Confidence: " + io_confidence);
             io_magnetometer_text.setText("Magnetometer: " + io_magnetometer);
             io_accelerometer_text.setText("Accelerometer: " + io_accelerometer);
             io_battery_text.setText("Battery: " + io_battery);
             io_light_text.setText("Light: " + io_light);
-            io_telephony_text.setText("GSM Strength: " + io_telephony);
+            io_gps_text.setText("GPS accuracy: " + io_gps);
         }
         if( ioMeter != null && !ioMeter.isClosed()) ioMeter.close();
 

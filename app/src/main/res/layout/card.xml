@@ -43,6 +43,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="GSM strength: initializing"
-            android:id="@+id/io_gsm_strength" android:textColor="#ff000000"/>
+            android:text="GPS accuracy: initializing"
+            android:id="@+id/io_gps_accuracy" android:textColor="#ff000000"/>
 </LinearLayout>
