@@ -543,11 +543,11 @@ public class Plugin extends Aware_Plugin {
                         }
                     }
                     else {//Night
-                        if (avg_light < (2/hour_weight)) {
+                        if (avg_light < (3/hour_weight)) {
                             if (DEBUG) Log.d("LightReceiver", "lower than 2");
                             decisionMatrix[0][3] = 0;
                             decisionMatrix[1][3] = 0.8 * hour_weight;
-                        } else if (avg_light >=(2/hour_weight) && avg_light < (20/hour_weight)) {
+                        } else if (avg_light >=(3/hour_weight) && avg_light < (20/hour_weight)) {
                             if (DEBUG) Log.d("LightReceiver", "between 2 and 20");
                             decisionMatrix[0][3] = 1;
                             decisionMatrix[1][3] = 0.6 * hour_weight;
@@ -605,15 +605,10 @@ public class Plugin extends Aware_Plugin {
                         if (DEBUG) Log.d("LocationReceiver", "low accuracy");
                         decisionMatrix[0][1] = 0;
                         decisionMatrix[1][1] = 0.6;
-                    } else if (avg_gps_accuracy >= 20 && avg_gps_accuracy < 25) {
+                    } else if (avg_gps_accuracy >= 20 && avg_gps_accuracy < 35) {
                         if (DEBUG) Log.d("LocationReceiver", "low accuracy");
                         decisionMatrix[0][1] = 1;
                         decisionMatrix[1][1] = 0.3;
-                    }
-                    else if (avg_gps_accuracy >= 25 && avg_gps_accuracy < 30) {
-                        if (DEBUG) Log.d("LocationReceiver", "low accuracy");
-                        decisionMatrix[0][1] = 1;
-                        decisionMatrix[1][1] = 0.6;
                     }else {
                         if (DEBUG) Log.d("LocationReceiver", "high accuracy");
                         decisionMatrix[0][1] = 1;
