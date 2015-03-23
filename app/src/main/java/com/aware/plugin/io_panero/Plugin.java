@@ -95,15 +95,15 @@ public class Plugin extends Aware_Plugin {
 
         //Set settings (amount of samples for each sensor, and IO plugin awaking frequency)
         if (Aware.getSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER).length() == 0) {
-            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER, 10);
+            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER, 20);
         }
 
         if (Aware.getSetting(getApplicationContext(), Settings.SAMPLES_MAGNETOMETER).length() == 0) {
-            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_MAGNETOMETER, 10);
+            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_MAGNETOMETER, 20);
         }
 
         if (Aware.getSetting(getApplicationContext(), Settings.SAMPLES_LIGHT_METER).length() == 0) {
-            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_LIGHT_METER, 5);
+            Aware.setSetting(getApplicationContext(), Settings.SAMPLES_LIGHT_METER, 10);
         }
 
         if (Aware.getSetting(getApplicationContext(), Settings.SAMPLES_LOCATION_METER).length() == 0) {
@@ -111,7 +111,7 @@ public class Plugin extends Aware_Plugin {
         }
 
         if (Aware.getSetting(getApplicationContext(), Settings.FREQUENCY_IO_METER).length() == 0) {
-            Aware.setSetting(getApplicationContext(), Settings.FREQUENCY_IO_METER, 3);
+            Aware.setSetting(getApplicationContext(), Settings.FREQUENCY_IO_METER, 2);
         }
 
         //Turn on the sensors
@@ -335,7 +335,7 @@ public class Plugin extends Aware_Plugin {
     received hour of the day.
      */
     public static double getHourWeight(int hour){
-        return ((-0.5 / 11) * (hour % 12)) + 1;
+        return ((hour % 12)/22) + 1;
     }
 
     /*
@@ -379,11 +379,11 @@ public class Plugin extends Aware_Plugin {
                         if (DEBUG) Log.d("MagnetReceiver", "Low magnetism, probably inside");
                         decisionMatrix[0][0] = 1;
                         decisionMatrix[1][0] = 0.7;
-                    } else if (avg_magnet > 47 && avg_magnet < 52) {
+                    } else if (avg_magnet > 47 && avg_magnet <= 52) {
                         if (DEBUG) Log.d("MagnetReceiver", "Semindoor values, therefore indoor");
                         decisionMatrix[0][0] = 1;
                         decisionMatrix[1][0] = 0.5;
-                    } else if (avg_magnet >= 52 && avg_magnet < 60) {
+                    } else if (avg_magnet > 52 && avg_magnet < 60) {
                         if (DEBUG) Log.d("MagnetReceiver", "High magnetism, therefore outdoors");
                         decisionMatrix[0][0] = 0;
                         decisionMatrix[1][0] = 0.7;
@@ -458,18 +458,18 @@ public class Plugin extends Aware_Plugin {
             int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_IO_METER));
 
             //Get the latest recorded value
-            if (interval_min > 0 && !lockBattery) {
+            if (interval_min > 0) {
                 Cursor battery = context.getContentResolver().query(Battery_Provider.Battery_Data.CONTENT_URI,
                         null, null, null, Battery_Provider.Battery_Data.TIMESTAMP + " DESC LIMIT 1");
                 if (battery != null && battery.moveToFirst()) {
                     int battery_status = battery.getInt(battery.getColumnIndex(Battery_Provider.Battery_Data.PLUG_ADAPTOR));
-                    //Turn off the sensor for computation
-                    Aware.setSetting(context, Aware_Preferences.STATUS_BATTERY, false);
-                    Intent apply = new Intent(Aware.ACTION_AWARE_REFRESH);
-                    context.sendBroadcast(apply);
-                    if (DEBUG) Log.d("BatterySensor", "Battery turned off");
-                    lockBattery = true;
                     switch (battery_status) {
+                        //case BatteryManager.DISCHARGING:
+                        case 0:
+                            if (DEBUG) Log.d("BatteryReceiver", "Battery discharging");
+                            decisionMatrix[0][2] = -1;
+                            decisionMatrix[1][2] = -1;
+                            break;
                         //case BatteryManager.BATTERY_PLUGGED_AC:
                         case 1:
                             if (DEBUG) Log.d("BatteryReceiver", "Battery plugged to AC");
@@ -481,11 +481,11 @@ public class Plugin extends Aware_Plugin {
                         case 2:
                             if (DEBUG) Log.d("BatteryReceiver", "Battery plugged to USB");
                             decisionMatrix[0][2] = 1;
-                            decisionMatrix[1][2] = 0.8;
+                            decisionMatrix[1][2] = 0.6;
                             break;
-                        //case BatteryManager.DISCHARGING:
+
                         default:
-                            if (DEBUG) Log.d("BatteryReceiver", "Battery discharging");
+                            if (DEBUG) Log.d("BatteryReceiver", "Other");
                             decisionMatrix[0][2] = -1;
                             decisionMatrix[1][2] = -1;
                             break;
@@ -524,18 +524,18 @@ public class Plugin extends Aware_Plugin {
                         avg_light = (int)(light_val / light_counter);
                     }
                     if (hour >= MID_DAY) { //Daylight
-                        if (avg_light <= 200) {
+                        if (avg_light <= (200*hour_weight)) {
                             if (DEBUG) Log.d("LightReceiver", "lower than 200");
                             decisionMatrix[0][3] = 1;
                             decisionMatrix[1][3] = 0.8 * hour_weight;
-                        } else if (avg_light > 200 && avg_light <= 500) {
+                        } else if (avg_light > (200*hour_weight) && avg_light <= (400*hour_weight)) {
                             if (DEBUG) Log.d("LightReceiver", "between 200 and 500");
                             decisionMatrix[0][3] = 1;
                             decisionMatrix[1][3] = 0.6 * hour_weight;
-                        } else if (avg_light > 500 && avg_light <= 800) {
+                        } else if (avg_light > (400*hour_weight) && avg_light <= (800*hour_weight)) {
                             if (DEBUG) Log.d("LightReceiver", "between 200 and 500");
-                            decisionMatrix[0][3] = 1;
-                            decisionMatrix[1][3] = 0.7 * hour_weight;
+                            decisionMatrix[0][3] = 0;
+                            decisionMatrix[1][3] = 0.6 * hour_weight;
                         } else {
                             if (DEBUG) Log.d("LightReceiver", "higher than 500");
                             decisionMatrix[0][3] = 0;
@@ -543,11 +543,11 @@ public class Plugin extends Aware_Plugin {
                         }
                     }
                     else {//Night
-                        if (avg_light < 2) {
+                        if (avg_light < (2/hour_weight)) {
                             if (DEBUG) Log.d("LightReceiver", "lower than 2");
                             decisionMatrix[0][3] = 0;
                             decisionMatrix[1][3] = 0.8 * hour_weight;
-                        } else if (avg_light >=2 && avg_light < 20) {
+                        } else if (avg_light >=(2/hour_weight) && avg_light < (20/hour_weight)) {
                             if (DEBUG) Log.d("LightReceiver", "between 2 and 20");
                             decisionMatrix[0][3] = 1;
                             decisionMatrix[1][3] = 0.6 * hour_weight;
@@ -575,6 +575,7 @@ public class Plugin extends Aware_Plugin {
             int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_IO_METER));
             int samples = Integer.parseInt(Aware.getSetting(context, Settings.SAMPLES_LOCATION_METER));
 
+
             if (interval_min > 0 && !lockLocation) {
                 if (location_counter < samples) {
                     //Get the latest recorded value
@@ -596,22 +597,27 @@ public class Plugin extends Aware_Plugin {
                     if (DEBUG) Log.d("LocationSensor", "Location turned off");
                     lockLocation = true;
                     avg_gps_accuracy = gps_accuracy / samples;
-                    if (avg_gps_accuracy < 50) {
+                    if (avg_gps_accuracy <= 10) {
+                        if (DEBUG) Log.d("LocationReceiver", "low accuracy");
+                        decisionMatrix[0][1] = 0;
+                        decisionMatrix[1][1] = 0.8;
+                    } else if (avg_gps_accuracy > 10 && avg_gps_accuracy < 20) {
+                        if (DEBUG) Log.d("LocationReceiver", "low accuracy");
+                        decisionMatrix[0][1] = 0;
+                        decisionMatrix[1][1] = 0.6;
+                    } else if (avg_gps_accuracy >= 20 && avg_gps_accuracy < 25) {
+                        if (DEBUG) Log.d("LocationReceiver", "low accuracy");
+                        decisionMatrix[0][1] = 1;
+                        decisionMatrix[1][1] = 0.3;
+                    }
+                    else if (avg_gps_accuracy >= 25 && avg_gps_accuracy < 30) {
                         if (DEBUG) Log.d("LocationReceiver", "low accuracy");
                         decisionMatrix[0][1] = 1;
                         decisionMatrix[1][1] = 0.6;
-                    } else if (avg_gps_accuracy >= 50 && avg_gps_accuracy < 100) {
-                        if (DEBUG) Log.d("LocationReceiver", "low accuracy");
-                        decisionMatrix[0][1] = 1;
-                        decisionMatrix[1][1] = 0.4;
-                    } else if (avg_gps_accuracy >= 100 && avg_gps_accuracy < 600) {
-                        if (DEBUG) Log.d("LocationReceiver", "low accuracy");
-                        decisionMatrix[0][1] = 0;
-                        decisionMatrix[1][1] = 0.4;
-                    } else {
+                    }else {
                         if (DEBUG) Log.d("LocationReceiver", "high accuracy");
-                        decisionMatrix[0][1] = 0;
-                        decisionMatrix[1][1] = 0.7;
+                        decisionMatrix[0][1] = 1;
+                        decisionMatrix[1][1] = 0.8;
                     }
                     decisionMatrix[2][4] = avg_gps_accuracy;
                     gps_accuracy = 0;

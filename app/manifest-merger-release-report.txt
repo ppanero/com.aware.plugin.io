@@ -17,8 +17,20 @@ uses-permission#android.permission.BATTERY_STATS
 ADDED from AndroidManifest.xml:4:5
 	android:name
 		ADDED from AndroidManifest.xml:4:22
-application
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from AndroidManifest.xml:5:5
+	android:name
+		ADDED from AndroidManifest.xml:5:22
+uses-permission#android.permission.READ_PHONE_STATE
 ADDED from AndroidManifest.xml:6:5
+	android:name
+		ADDED from AndroidManifest.xml:6:22
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from AndroidManifest.xml:7:5
+	android:name
+		ADDED from AndroidManifest.xml:7:22
+application
+ADDED from AndroidManifest.xml:9:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.android.support:gridlayout-v7:21.0.3:16:5
@@ -26,40 +38,51 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.google.android.gms:play-services:6.5.87:20:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.android.support:cardview-v7:21.0.3:16:5
-MERGED from com.awareframework:aware-core:3.2.8:51:5
+MERGED from com.awareframework:aware-core:3.3.3:51:5
 	android:label
-		ADDED from AndroidManifest.xml:6:45
+		ADDED from AndroidManifest.xml:9:45
 	android:allowBackup
-		ADDED from AndroidManifest.xml:6:18
-	android:icon
-		ADDED from AndroidManifest.xml:7:9
-	android:theme
-		ADDED from com.awareframework:aware-core:3.2.8:54:9
-service#com.aware.plugin.io_pablo_panero.Plugin
-ADDED from AndroidManifest.xml:9:9
-	android:exported
-		ADDED from AndroidManifest.xml:9:73
-	android:name
 		ADDED from AndroidManifest.xml:9:18
-activity#com.aware.plugin.io_pablo_panero.Settings
-ADDED from AndroidManifest.xml:10:9
+	android:icon
+		ADDED from AndroidManifest.xml:10:9
+	android:theme
+		ADDED from com.awareframework:aware-core:3.3.3:54:9
+service#com.aware.plugin.io_panero.Plugin
+ADDED from AndroidManifest.xml:12:9
 	android:exported
-		ADDED from AndroidManifest.xml:10:76
+		ADDED from AndroidManifest.xml:12:67
 	android:name
-		ADDED from AndroidManifest.xml:10:19
-provider#com.aware.plugin.io_pablo_panero.Provider
-ADDED from AndroidManifest.xml:11:9
-	android:readPermission
+		ADDED from AndroidManifest.xml:12:18
+service#com.aware.Aware
+ADDED from AndroidManifest.xml:13:9
+MERGED from com.awareframework:aware-core:3.3.3:150:9
+	android:exported
+		ADDED from com.awareframework:aware-core:3.3.3:152:13
+	android:name
+		ADDED from AndroidManifest.xml:13:18
+receiver#com.aware.plugin.io_panero.IOAlarm
+ADDED from AndroidManifest.xml:14:9
+	android:name
 		ADDED from AndroidManifest.xml:14:19
+activity#com.aware.plugin.io_panero.Settings
+ADDED from AndroidManifest.xml:15:9
+	android:exported
+		ADDED from AndroidManifest.xml:15:70
+	android:name
+		ADDED from AndroidManifest.xml:15:19
+provider#com.aware.plugin.io_panero.Provider
+ADDED from AndroidManifest.xml:16:9
+	android:readPermission
+		ADDED from AndroidManifest.xml:19:19
 	android:authorities
-		ADDED from AndroidManifest.xml:12:19
+		ADDED from AndroidManifest.xml:17:19
 		INJECTED from AndroidManifest.xml:0:0
 	android:exported
-		ADDED from AndroidManifest.xml:13:19
+		ADDED from AndroidManifest.xml:18:19
 	android:name
-		ADDED from AndroidManifest.xml:11:19
+		ADDED from AndroidManifest.xml:16:19
 	android:writePermission
-		ADDED from AndroidManifest.xml:15:19
+		ADDED from AndroidManifest.xml:20:19
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
@@ -69,7 +92,7 @@ MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from com.google.android.gms:play-services:6.5.87:18:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from com.android.support:cardview-v7:21.0.3:15:5
-MERGED from com.awareframework:aware-core:3.2.8:7:5
+MERGED from com.awareframework:aware-core:3.3.3:7:5
 	android:targetSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
@@ -78,518 +101,520 @@ MERGED from com.awareframework:aware-core:3.2.8:7:5
 		INJECTED from AndroidManifest.xml:0:0
 meta-data#com.google.android.gms.version
 ADDED from com.google.android.gms:play-services:6.5.87:21:9
-MERGED from com.awareframework:aware-core:3.2.8:55:9
+MERGED from com.awareframework:aware-core:3.3.3:55:9
 	android:value
 		ADDED from com.google.android.gms:play-services:6.5.87:23:13
 	android:name
 		ADDED from com.google.android.gms:play-services:6.5.87:22:13
 uses-feature#android.hardware.camera
-ADDED from com.awareframework:aware-core:3.2.8:11:5
+ADDED from com.awareframework:aware-core:3.3.3:11:5
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:11:19
+		ADDED from com.awareframework:aware-core:3.3.3:11:19
 uses-feature#android.hardware.camera.autofocus
-ADDED from com.awareframework:aware-core:3.2.8:12:5
+ADDED from com.awareframework:aware-core:3.3.3:12:5
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:12:19
+		ADDED from com.awareframework:aware-core:3.3.3:12:19
 uses-permission#com.aware.READ_CONTEXT_DATA
-ADDED from com.awareframework:aware-core:3.2.8:44:5
+ADDED from com.awareframework:aware-core:3.3.3:44:5
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:44:22
+		ADDED from com.awareframework:aware-core:3.3.3:44:22
 uses-permission#com.aware.WRITE_CONTEXT_DATA
-ADDED from com.awareframework:aware-core:3.2.8:45:5
+ADDED from com.awareframework:aware-core:3.3.3:45:5
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:45:22
+		ADDED from com.awareframework:aware-core:3.3.3:45:22
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from com.awareframework:aware-core:3.2.8:46:5
+ADDED from com.awareframework:aware-core:3.3.3:46:5
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:46:22
+		ADDED from com.awareframework:aware-core:3.3.3:46:22
 uses-permission#android.permission.INTERNET
-ADDED from com.awareframework:aware-core:3.2.8:47:5
+ADDED from com.awareframework:aware-core:3.3.3:47:5
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:47:22
+		ADDED from com.awareframework:aware-core:3.3.3:47:22
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from com.awareframework:aware-core:3.2.8:48:5
+ADDED from com.awareframework:aware-core:3.3.3:48:5
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:48:22
+		ADDED from com.awareframework:aware-core:3.3.3:48:22
 uses-permission#android.permission.WAKE_LOCK
-ADDED from com.awareframework:aware-core:3.2.8:49:5
+ADDED from com.awareframework:aware-core:3.3.3:49:5
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:49:22
+		ADDED from com.awareframework:aware-core:3.3.3:49:22
 activity#com.aware.Aware_Preferences
-ADDED from com.awareframework:aware-core:3.2.8:59:9
+ADDED from com.awareframework:aware-core:3.3.3:59:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:62:13
+		ADDED from com.awareframework:aware-core:3.3.3:62:13
 	android:label
-		ADDED from com.awareframework:aware-core:3.2.8:65:13
+		ADDED from com.awareframework:aware-core:3.3.3:65:13
 	android:launchMode
-		ADDED from com.awareframework:aware-core:3.2.8:66:13
+		ADDED from com.awareframework:aware-core:3.3.3:66:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:63:13
+		ADDED from com.awareframework:aware-core:3.3.3:63:13
 	android:configChanges
-		ADDED from com.awareframework:aware-core:3.2.8:61:13
+		ADDED from com.awareframework:aware-core:3.3.3:61:13
 	android:icon
-		ADDED from com.awareframework:aware-core:3.2.8:64:13
+		ADDED from com.awareframework:aware-core:3.3.3:64:13
 	android:theme
-		ADDED from com.awareframework:aware-core:3.2.8:67:13
+		ADDED from com.awareframework:aware-core:3.3.3:67:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:60:13
+		ADDED from com.awareframework:aware-core:3.3.3:60:13
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from com.awareframework:aware-core:3.2.8:68:13
+ADDED from com.awareframework:aware-core:3.3.3:68:13
 action#android.intent.action.MAIN
-ADDED from com.awareframework:aware-core:3.2.8:69:17
+ADDED from com.awareframework:aware-core:3.3.3:69:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:69:25
+		ADDED from com.awareframework:aware-core:3.3.3:69:25
 category#android.intent.category.LAUNCHER
-ADDED from com.awareframework:aware-core:3.2.8:71:17
+ADDED from com.awareframework:aware-core:3.3.3:71:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:71:27
+		ADDED from com.awareframework:aware-core:3.3.3:71:27
 activity#com.aware.ui.Stream_UI
-ADDED from com.awareframework:aware-core:3.2.8:74:9
+ADDED from com.awareframework:aware-core:3.3.3:74:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:77:13
+		ADDED from com.awareframework:aware-core:3.3.3:77:13
 	android:label
-		ADDED from com.awareframework:aware-core:3.2.8:80:13
+		ADDED from com.awareframework:aware-core:3.3.3:80:13
 	android:parentActivityName
-		ADDED from com.awareframework:aware-core:3.2.8:83:13
+		ADDED from com.awareframework:aware-core:3.3.3:83:13
 	android:launchMode
-		ADDED from com.awareframework:aware-core:3.2.8:81:13
+		ADDED from com.awareframework:aware-core:3.3.3:81:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:78:13
+		ADDED from com.awareframework:aware-core:3.3.3:78:13
 	android:noHistory
-		ADDED from com.awareframework:aware-core:3.2.8:82:13
+		ADDED from com.awareframework:aware-core:3.3.3:82:13
 	android:configChanges
-		ADDED from com.awareframework:aware-core:3.2.8:76:13
+		ADDED from com.awareframework:aware-core:3.3.3:76:13
 	android:icon
-		ADDED from com.awareframework:aware-core:3.2.8:79:13
+		ADDED from com.awareframework:aware-core:3.3.3:79:13
 	android:theme
-		ADDED from com.awareframework:aware-core:3.2.8:84:13
+		ADDED from com.awareframework:aware-core:3.3.3:84:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:75:13
+		ADDED from com.awareframework:aware-core:3.3.3:75:13
 intent-filter#android.intent.action.ASSIST+android.intent.category.DEFAULT+android.intent.category.LAUNCHER
-ADDED from com.awareframework:aware-core:3.2.8:85:13
+ADDED from com.awareframework:aware-core:3.3.3:85:13
 action#android.intent.action.ASSIST
-ADDED from com.awareframework:aware-core:3.2.8:86:17
+ADDED from com.awareframework:aware-core:3.3.3:86:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:86:25
+		ADDED from com.awareframework:aware-core:3.3.3:86:25
 category#android.intent.category.DEFAULT
-ADDED from com.awareframework:aware-core:3.2.8:88:17
+ADDED from com.awareframework:aware-core:3.3.3:88:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:88:27
+		ADDED from com.awareframework:aware-core:3.3.3:88:27
 meta-data#com.android.systemui.action_assist_icon
-ADDED from com.awareframework:aware-core:3.2.8:92:13
+ADDED from com.awareframework:aware-core:3.3.3:92:13
 	android:resource
-		ADDED from com.awareframework:aware-core:3.2.8:94:17
+		ADDED from com.awareframework:aware-core:3.3.3:94:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:93:17
+		ADDED from com.awareframework:aware-core:3.3.3:93:17
 meta-data#android.support.PARENT_ACTIVITY
-ADDED from com.awareframework:aware-core:3.2.8:95:13
+ADDED from com.awareframework:aware-core:3.3.3:95:13
 	android:value
-		ADDED from com.awareframework:aware-core:3.2.8:97:17
+		ADDED from com.awareframework:aware-core:3.3.3:97:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:96:17
+		ADDED from com.awareframework:aware-core:3.3.3:96:17
 activity#com.aware.ui.CameraStudy
-ADDED from com.awareframework:aware-core:3.2.8:99:9
+ADDED from com.awareframework:aware-core:3.3.3:99:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:102:13
+		ADDED from com.awareframework:aware-core:3.3.3:102:13
 	android:label
-		ADDED from com.awareframework:aware-core:3.2.8:103:13
+		ADDED from com.awareframework:aware-core:3.3.3:103:13
 	android:parentActivityName
-		ADDED from com.awareframework:aware-core:3.2.8:105:13
+		ADDED from com.awareframework:aware-core:3.3.3:105:13
 	android:launchMode
-		ADDED from com.awareframework:aware-core:3.2.8:104:13
+		ADDED from com.awareframework:aware-core:3.3.3:104:13
 	android:configChanges
-		ADDED from com.awareframework:aware-core:3.2.8:101:13
+		ADDED from com.awareframework:aware-core:3.3.3:101:13
 	android:theme
-		ADDED from com.awareframework:aware-core:3.2.8:106:13
+		ADDED from com.awareframework:aware-core:3.3.3:106:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:100:13
+		ADDED from com.awareframework:aware-core:3.3.3:100:13
 activity#com.aware.ui.Plugins_Manager
-ADDED from com.awareframework:aware-core:3.2.8:111:9
+ADDED from com.awareframework:aware-core:3.3.3:111:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:114:13
+		ADDED from com.awareframework:aware-core:3.3.3:114:13
 	android:label
-		ADDED from com.awareframework:aware-core:3.2.8:117:13
+		ADDED from com.awareframework:aware-core:3.3.3:117:13
 	android:parentActivityName
-		ADDED from com.awareframework:aware-core:3.2.8:119:13
+		ADDED from com.awareframework:aware-core:3.3.3:119:13
 	android:launchMode
-		ADDED from com.awareframework:aware-core:3.2.8:118:13
+		ADDED from com.awareframework:aware-core:3.3.3:118:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:115:13
+		ADDED from com.awareframework:aware-core:3.3.3:115:13
 	android:configChanges
-		ADDED from com.awareframework:aware-core:3.2.8:113:13
+		ADDED from com.awareframework:aware-core:3.3.3:113:13
 	android:icon
-		ADDED from com.awareframework:aware-core:3.2.8:116:13
+		ADDED from com.awareframework:aware-core:3.3.3:116:13
 	android:theme
-		ADDED from com.awareframework:aware-core:3.2.8:120:13
+		ADDED from com.awareframework:aware-core:3.3.3:120:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:112:13
+		ADDED from com.awareframework:aware-core:3.3.3:112:13
 activity#com.aware.ui.About
-ADDED from com.awareframework:aware-core:3.2.8:125:9
+ADDED from com.awareframework:aware-core:3.3.3:125:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:128:13
+		ADDED from com.awareframework:aware-core:3.3.3:128:13
 	android:label
-		ADDED from com.awareframework:aware-core:3.2.8:130:13
+		ADDED from com.awareframework:aware-core:3.3.3:130:13
 	android:parentActivityName
-		ADDED from com.awareframework:aware-core:3.2.8:132:13
+		ADDED from com.awareframework:aware-core:3.3.3:132:13
 	android:launchMode
-		ADDED from com.awareframework:aware-core:3.2.8:131:13
+		ADDED from com.awareframework:aware-core:3.3.3:131:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:129:13
+		ADDED from com.awareframework:aware-core:3.3.3:129:13
 	android:configChanges
-		ADDED from com.awareframework:aware-core:3.2.8:127:13
+		ADDED from com.awareframework:aware-core:3.3.3:127:13
 	android:theme
-		ADDED from com.awareframework:aware-core:3.2.8:133:13
+		ADDED from com.awareframework:aware-core:3.3.3:133:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:126:13
+		ADDED from com.awareframework:aware-core:3.3.3:126:13
 activity#com.aware.ui.ESM_Queue
-ADDED from com.awareframework:aware-core:3.2.8:135:9
+ADDED from com.awareframework:aware-core:3.3.3:135:9
 	android:clearTaskOnLaunch
-		ADDED from com.awareframework:aware-core:3.2.8:137:13
+		ADDED from com.awareframework:aware-core:3.3.3:137:13
 	android:excludeFromRecents
-		ADDED from com.awareframework:aware-core:3.2.8:139:13
+		ADDED from com.awareframework:aware-core:3.3.3:139:13
 	android:launchMode
-		ADDED from com.awareframework:aware-core:3.2.8:141:13
+		ADDED from com.awareframework:aware-core:3.3.3:141:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:140:13
+		ADDED from com.awareframework:aware-core:3.3.3:140:13
 	android:noHistory
-		ADDED from com.awareframework:aware-core:3.2.8:142:13
+		ADDED from com.awareframework:aware-core:3.3.3:142:13
 	android:configChanges
-		ADDED from com.awareframework:aware-core:3.2.8:138:13
+		ADDED from com.awareframework:aware-core:3.3.3:138:13
 	android:showOnLockScreen
-		ADDED from com.awareframework:aware-core:3.2.8:143:13
+		ADDED from com.awareframework:aware-core:3.3.3:143:13
 	android:theme
-		ADDED from com.awareframework:aware-core:3.2.8:144:13
+		ADDED from com.awareframework:aware-core:3.3.3:144:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:136:13
+		ADDED from com.awareframework:aware-core:3.3.3:136:13
 service#com.aware.Keyboard
-ADDED from com.awareframework:aware-core:3.2.8:147:9
+ADDED from com.awareframework:aware-core:3.3.3:147:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:149:13
+		ADDED from com.awareframework:aware-core:3.3.3:149:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:148:13
-service#com.aware.Aware
-ADDED from com.awareframework:aware-core:3.2.8:150:9
-	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:152:13
-	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:151:13
+		ADDED from com.awareframework:aware-core:3.3.3:148:13
 service#com.aware.Applications
-ADDED from com.awareframework:aware-core:3.2.8:154:9
+ADDED from com.awareframework:aware-core:3.3.3:154:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:156:13
+		ADDED from com.awareframework:aware-core:3.3.3:156:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:157:13
+		ADDED from com.awareframework:aware-core:3.3.3:157:13
 	android:permission
-		ADDED from com.awareframework:aware-core:3.2.8:158:13
+		ADDED from com.awareframework:aware-core:3.3.3:158:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:155:13
+		ADDED from com.awareframework:aware-core:3.3.3:155:13
 intent-filter#android.accessibilityservice.AccessibilityService
-ADDED from com.awareframework:aware-core:3.2.8:159:13
+ADDED from com.awareframework:aware-core:3.3.3:159:13
 action#android.accessibilityservice.AccessibilityService
-ADDED from com.awareframework:aware-core:3.2.8:160:17
+ADDED from com.awareframework:aware-core:3.3.3:160:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:160:25
+		ADDED from com.awareframework:aware-core:3.3.3:160:25
 meta-data#android.accessibilityservice
-ADDED from com.awareframework:aware-core:3.2.8:163:13
+ADDED from com.awareframework:aware-core:3.3.3:163:13
 	android:resource
-		ADDED from com.awareframework:aware-core:3.2.8:165:17
+		ADDED from com.awareframework:aware-core:3.3.3:165:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:164:17
+		ADDED from com.awareframework:aware-core:3.3.3:164:17
 service#com.aware.Applications$BackgroundService
-ADDED from com.awareframework:aware-core:3.2.8:167:9
+ADDED from com.awareframework:aware-core:3.3.3:167:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:169:13
+		ADDED from com.awareframework:aware-core:3.3.3:169:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:168:13
+		ADDED from com.awareframework:aware-core:3.3.3:168:13
 service#com.aware.Locations
-ADDED from com.awareframework:aware-core:3.2.8:171:9
+ADDED from com.awareframework:aware-core:3.3.3:171:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:173:13
+		ADDED from com.awareframework:aware-core:3.3.3:173:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:172:13
+		ADDED from com.awareframework:aware-core:3.3.3:172:13
 service#com.aware.Bluetooth
-ADDED from com.awareframework:aware-core:3.2.8:175:9
+ADDED from com.awareframework:aware-core:3.3.3:175:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:177:13
+		ADDED from com.awareframework:aware-core:3.3.3:177:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:176:13
+		ADDED from com.awareframework:aware-core:3.3.3:176:13
 service#com.aware.Screen
-ADDED from com.awareframework:aware-core:3.2.8:179:9
+ADDED from com.awareframework:aware-core:3.3.3:179:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:181:13
+		ADDED from com.awareframework:aware-core:3.3.3:181:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:180:13
+		ADDED from com.awareframework:aware-core:3.3.3:180:13
 service#com.aware.Battery
-ADDED from com.awareframework:aware-core:3.2.8:183:9
+ADDED from com.awareframework:aware-core:3.3.3:183:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:185:13
+		ADDED from com.awareframework:aware-core:3.3.3:185:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:184:13
+		ADDED from com.awareframework:aware-core:3.3.3:184:13
 service#com.aware.Network
-ADDED from com.awareframework:aware-core:3.2.8:187:9
+ADDED from com.awareframework:aware-core:3.3.3:187:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:189:13
+		ADDED from com.awareframework:aware-core:3.3.3:189:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:188:13
+		ADDED from com.awareframework:aware-core:3.3.3:188:13
 service#com.aware.Communication
-ADDED from com.awareframework:aware-core:3.2.8:191:9
+ADDED from com.awareframework:aware-core:3.3.3:191:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:193:13
+		ADDED from com.awareframework:aware-core:3.3.3:193:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:192:13
+		ADDED from com.awareframework:aware-core:3.3.3:192:13
 service#com.aware.Processor
-ADDED from com.awareframework:aware-core:3.2.8:195:9
+ADDED from com.awareframework:aware-core:3.3.3:195:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:197:13
+		ADDED from com.awareframework:aware-core:3.3.3:197:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:196:13
+		ADDED from com.awareframework:aware-core:3.3.3:196:13
 service#com.aware.TimeZone
-ADDED from com.awareframework:aware-core:3.2.8:199:9
+ADDED from com.awareframework:aware-core:3.3.3:199:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:201:13
+		ADDED from com.awareframework:aware-core:3.3.3:201:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:200:13
+		ADDED from com.awareframework:aware-core:3.3.3:200:13
 service#com.aware.Mqtt
-ADDED from com.awareframework:aware-core:3.2.8:203:9
+ADDED from com.awareframework:aware-core:3.3.3:203:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:205:13
+		ADDED from com.awareframework:aware-core:3.3.3:205:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:204:13
+		ADDED from com.awareframework:aware-core:3.3.3:204:13
 service#com.aware.Traffic
-ADDED from com.awareframework:aware-core:3.2.8:207:9
+ADDED from com.awareframework:aware-core:3.3.3:207:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:209:13
+		ADDED from com.awareframework:aware-core:3.3.3:209:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:208:13
+		ADDED from com.awareframework:aware-core:3.3.3:208:13
 service#com.aware.Accelerometer
-ADDED from com.awareframework:aware-core:3.2.8:211:9
+ADDED from com.awareframework:aware-core:3.3.3:211:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:213:13
+		ADDED from com.awareframework:aware-core:3.3.3:213:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:212:13
+		ADDED from com.awareframework:aware-core:3.3.3:212:13
 service#com.aware.Gyroscope
-ADDED from com.awareframework:aware-core:3.2.8:215:9
+ADDED from com.awareframework:aware-core:3.3.3:215:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:217:13
+		ADDED from com.awareframework:aware-core:3.3.3:217:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:216:13
+		ADDED from com.awareframework:aware-core:3.3.3:216:13
 service#com.aware.Bluetooth$BackgroundService
-ADDED from com.awareframework:aware-core:3.2.8:219:9
+ADDED from com.awareframework:aware-core:3.3.3:219:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:221:13
+		ADDED from com.awareframework:aware-core:3.3.3:221:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:220:13
+		ADDED from com.awareframework:aware-core:3.3.3:220:13
 service#com.aware.WiFi
-ADDED from com.awareframework:aware-core:3.2.8:223:9
+ADDED from com.awareframework:aware-core:3.3.3:223:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:225:13
+		ADDED from com.awareframework:aware-core:3.3.3:225:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:224:13
+		ADDED from com.awareframework:aware-core:3.3.3:224:13
 service#com.aware.WiFi$BackgroundService
-ADDED from com.awareframework:aware-core:3.2.8:227:9
+ADDED from com.awareframework:aware-core:3.3.3:227:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:229:13
+		ADDED from com.awareframework:aware-core:3.3.3:229:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:228:13
+		ADDED from com.awareframework:aware-core:3.3.3:228:13
 service#com.aware.Telephony
-ADDED from com.awareframework:aware-core:3.2.8:231:9
+ADDED from com.awareframework:aware-core:3.3.3:231:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:233:13
+		ADDED from com.awareframework:aware-core:3.3.3:233:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:232:13
+		ADDED from com.awareframework:aware-core:3.3.3:232:13
 service#com.aware.Rotation
-ADDED from com.awareframework:aware-core:3.2.8:235:9
+ADDED from com.awareframework:aware-core:3.3.3:235:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:237:13
+		ADDED from com.awareframework:aware-core:3.3.3:237:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:236:13
+		ADDED from com.awareframework:aware-core:3.3.3:236:13
 service#com.aware.Light
-ADDED from com.awareframework:aware-core:3.2.8:239:9
+ADDED from com.awareframework:aware-core:3.3.3:239:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:241:13
+		ADDED from com.awareframework:aware-core:3.3.3:241:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:240:13
+		ADDED from com.awareframework:aware-core:3.3.3:240:13
 service#com.aware.Proximity
-ADDED from com.awareframework:aware-core:3.2.8:243:9
+ADDED from com.awareframework:aware-core:3.3.3:243:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:245:13
+		ADDED from com.awareframework:aware-core:3.3.3:245:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:244:13
+		ADDED from com.awareframework:aware-core:3.3.3:244:13
 service#com.aware.Magnetometer
-ADDED from com.awareframework:aware-core:3.2.8:247:9
+ADDED from com.awareframework:aware-core:3.3.3:247:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:249:13
+		ADDED from com.awareframework:aware-core:3.3.3:249:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:248:13
+		ADDED from com.awareframework:aware-core:3.3.3:248:13
 service#com.aware.Barometer
-ADDED from com.awareframework:aware-core:3.2.8:251:9
+ADDED from com.awareframework:aware-core:3.3.3:251:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:253:13
+		ADDED from com.awareframework:aware-core:3.3.3:253:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:252:13
+		ADDED from com.awareframework:aware-core:3.3.3:252:13
 service#com.aware.Gravity
-ADDED from com.awareframework:aware-core:3.2.8:255:9
+ADDED from com.awareframework:aware-core:3.3.3:255:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:257:13
+		ADDED from com.awareframework:aware-core:3.3.3:257:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:256:13
+		ADDED from com.awareframework:aware-core:3.3.3:256:13
 service#com.aware.LinearAccelerometer
-ADDED from com.awareframework:aware-core:3.2.8:259:9
+ADDED from com.awareframework:aware-core:3.3.3:259:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:261:13
+		ADDED from com.awareframework:aware-core:3.3.3:261:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:260:13
+		ADDED from com.awareframework:aware-core:3.3.3:260:13
 service#com.aware.Temperature
-ADDED from com.awareframework:aware-core:3.2.8:263:9
+ADDED from com.awareframework:aware-core:3.3.3:263:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:265:13
+		ADDED from com.awareframework:aware-core:3.3.3:265:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:264:13
+		ADDED from com.awareframework:aware-core:3.3.3:264:13
 service#com.aware.ESM
-ADDED from com.awareframework:aware-core:3.2.8:267:9
+ADDED from com.awareframework:aware-core:3.3.3:267:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:269:13
+		ADDED from com.awareframework:aware-core:3.3.3:269:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:268:13
+		ADDED from com.awareframework:aware-core:3.3.3:268:13
 service#com.aware.ESM$BackgroundService
-ADDED from com.awareframework:aware-core:3.2.8:271:9
+ADDED from com.awareframework:aware-core:3.3.3:271:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:273:13
+		ADDED from com.awareframework:aware-core:3.3.3:273:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:272:13
+		ADDED from com.awareframework:aware-core:3.3.3:272:13
 service#com.aware.Installations
-ADDED from com.awareframework:aware-core:3.2.8:275:9
+ADDED from com.awareframework:aware-core:3.3.3:275:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:277:13
+		ADDED from com.awareframework:aware-core:3.3.3:277:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:276:13
+		ADDED from com.awareframework:aware-core:3.3.3:276:13
 service#com.aware.utils.WebserviceHelper
-ADDED from com.awareframework:aware-core:3.2.8:279:9
+ADDED from com.awareframework:aware-core:3.3.3:279:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:281:13
+		ADDED from com.awareframework:aware-core:3.3.3:281:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:280:13
+		ADDED from com.awareframework:aware-core:3.3.3:280:13
 intent-filter#ACTION_AWARE_WEBSERVICE_CLEAR_TABLE+ACTION_AWARE_WEBSERVICE_SYNC_TABLE
-ADDED from com.awareframework:aware-core:3.2.8:282:13
+ADDED from com.awareframework:aware-core:3.3.3:282:13
 action#ACTION_AWARE_WEBSERVICE_SYNC_TABLE
-ADDED from com.awareframework:aware-core:3.2.8:283:17
+ADDED from com.awareframework:aware-core:3.3.3:283:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:283:25
+		ADDED from com.awareframework:aware-core:3.3.3:283:25
 action#ACTION_AWARE_WEBSERVICE_CLEAR_TABLE
-ADDED from com.awareframework:aware-core:3.2.8:284:17
+ADDED from com.awareframework:aware-core:3.3.3:284:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:284:25
+		ADDED from com.awareframework:aware-core:3.3.3:284:25
 service#com.aware.Aware_Preferences$StudyConfig
-ADDED from com.awareframework:aware-core:3.2.8:287:9
+ADDED from com.awareframework:aware-core:3.3.3:287:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:289:13
+		ADDED from com.awareframework:aware-core:3.3.3:289:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:288:13
+		ADDED from com.awareframework:aware-core:3.3.3:288:13
 service#com.aware.Aware$UpdateFrameworkService
-ADDED from com.awareframework:aware-core:3.2.8:290:9
+ADDED from com.awareframework:aware-core:3.3.3:290:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:292:13
+		ADDED from com.awareframework:aware-core:3.3.3:292:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:293:13
+		ADDED from com.awareframework:aware-core:3.3.3:293:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:291:13
+		ADDED from com.awareframework:aware-core:3.3.3:291:13
 service#com.aware.utils.DownloadPluginService
-ADDED from com.awareframework:aware-core:3.2.8:294:9
+ADDED from com.awareframework:aware-core:3.3.3:294:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:296:13
+		ADDED from com.awareframework:aware-core:3.3.3:296:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:295:13
+		ADDED from com.awareframework:aware-core:3.3.3:295:13
+service#com.aware.Aware$UpdatePlugins
+ADDED from com.awareframework:aware-core:3.3.3:297:9
+	android:enabled
+		ADDED from com.awareframework:aware-core:3.3.3:299:13
+	android:exported
+		ADDED from com.awareframework:aware-core:3.3.3:300:13
+	android:name
+		ADDED from com.awareframework:aware-core:3.3.3:298:13
 service#com.aware.Wear_Sync
-ADDED from com.awareframework:aware-core:3.2.8:297:9
+ADDED from com.awareframework:aware-core:3.3.3:301:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:299:13
+		ADDED from com.awareframework:aware-core:3.3.3:303:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:300:13
+		ADDED from com.awareframework:aware-core:3.3.3:304:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:298:13
+		ADDED from com.awareframework:aware-core:3.3.3:302:13
 service#com.aware.Wear_Service
-ADDED from com.awareframework:aware-core:3.2.8:301:9
+ADDED from com.awareframework:aware-core:3.3.3:305:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:303:13
+		ADDED from com.awareframework:aware-core:3.3.3:307:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:304:13
+		ADDED from com.awareframework:aware-core:3.3.3:308:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:302:13
+		ADDED from com.awareframework:aware-core:3.3.3:306:13
 intent-filter#com.google.android.gms.wearable.BIND_LISTENER
-ADDED from com.awareframework:aware-core:3.2.8:305:13
+ADDED from com.awareframework:aware-core:3.3.3:309:13
 action#com.google.android.gms.wearable.BIND_LISTENER
-ADDED from com.awareframework:aware-core:3.2.8:306:17
+ADDED from com.awareframework:aware-core:3.3.3:310:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:306:25
+		ADDED from com.awareframework:aware-core:3.3.3:310:25
 service#com.aware.Wear_Sync$Wear_Bg
-ADDED from com.awareframework:aware-core:3.2.8:309:9
+ADDED from com.awareframework:aware-core:3.3.3:313:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:311:13
+		ADDED from com.awareframework:aware-core:3.3.3:315:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:312:13
+		ADDED from com.awareframework:aware-core:3.3.3:316:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:310:13
+		ADDED from com.awareframework:aware-core:3.3.3:314:13
 receiver#com.aware.Aware$Aware_Broadcaster
-ADDED from com.awareframework:aware-core:3.2.8:314:9
+ADDED from com.awareframework:aware-core:3.3.3:318:9
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:316:13
+		ADDED from com.awareframework:aware-core:3.3.3:320:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:315:13
+		ADDED from com.awareframework:aware-core:3.3.3:319:13
 intent-filter#ACTION_AWARE_CLEAR_DATA+ACTION_AWARE_CONFIGURATION+ACTION_AWARE_REFRESH+ACTION_AWARE_SYNC_DATA
-ADDED from com.awareframework:aware-core:3.2.8:317:13
+ADDED from com.awareframework:aware-core:3.3.3:321:13
 action#ACTION_AWARE_SYNC_DATA
-ADDED from com.awareframework:aware-core:3.2.8:318:17
+ADDED from com.awareframework:aware-core:3.3.3:322:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:318:25
+		ADDED from com.awareframework:aware-core:3.3.3:322:25
 action#ACTION_AWARE_CLEAR_DATA
-ADDED from com.awareframework:aware-core:3.2.8:319:17
+ADDED from com.awareframework:aware-core:3.3.3:323:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:319:25
+		ADDED from com.awareframework:aware-core:3.3.3:323:25
 action#ACTION_AWARE_CONFIGURATION
-ADDED from com.awareframework:aware-core:3.2.8:320:17
+ADDED from com.awareframework:aware-core:3.3.3:324:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:320:25
+		ADDED from com.awareframework:aware-core:3.3.3:324:25
 action#ACTION_AWARE_REFRESH
-ADDED from com.awareframework:aware-core:3.2.8:321:17
+ADDED from com.awareframework:aware-core:3.3.3:325:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:321:25
+		ADDED from com.awareframework:aware-core:3.3.3:325:25
 receiver#com.aware.Aware$PluginMonitor
-ADDED from com.awareframework:aware-core:3.2.8:324:9
+ADDED from com.awareframework:aware-core:3.3.3:328:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:326:13
+		ADDED from com.awareframework:aware-core:3.3.3:330:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:327:13
+		ADDED from com.awareframework:aware-core:3.3.3:331:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:325:13
+		ADDED from com.awareframework:aware-core:3.3.3:329:13
 intent-filter#android.intent.action.PACKAGE_ADDED+android.intent.action.PACKAGE_REMOVED
-ADDED from com.awareframework:aware-core:3.2.8:328:13
+ADDED from com.awareframework:aware-core:3.3.3:332:13
 action#android.intent.action.PACKAGE_ADDED
-ADDED from com.awareframework:aware-core:3.2.8:329:17
+ADDED from com.awareframework:aware-core:3.3.3:333:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:329:25
+		ADDED from com.awareframework:aware-core:3.3.3:333:25
 action#android.intent.action.PACKAGE_REMOVED
-ADDED from com.awareframework:aware-core:3.2.8:330:17
+ADDED from com.awareframework:aware-core:3.3.3:334:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:330:25
+		ADDED from com.awareframework:aware-core:3.3.3:334:25
 data
-ADDED from com.awareframework:aware-core:3.2.8:332:17
+ADDED from com.awareframework:aware-core:3.3.3:336:17
 	android:scheme
-		ADDED from com.awareframework:aware-core:3.2.8:332:23
+		ADDED from com.awareframework:aware-core:3.3.3:336:23
 receiver#com.aware.Aware$Storage_Broadcaster
-ADDED from com.awareframework:aware-core:3.2.8:335:9
+ADDED from com.awareframework:aware-core:3.3.3:339:9
 	android:enabled
-		ADDED from com.awareframework:aware-core:3.2.8:337:13
+		ADDED from com.awareframework:aware-core:3.3.3:341:13
 	android:exported
-		ADDED from com.awareframework:aware-core:3.2.8:338:13
+		ADDED from com.awareframework:aware-core:3.3.3:342:13
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:336:13
+		ADDED from com.awareframework:aware-core:3.3.3:340:13
 intent-filter#android.intent.action.MEDIA_MOUNTED+android.intent.action.MEDIA_UNMOUNTED
-ADDED from com.awareframework:aware-core:3.2.8:339:13
+ADDED from com.awareframework:aware-core:3.3.3:343:13
 action#android.intent.action.MEDIA_MOUNTED
-ADDED from com.awareframework:aware-core:3.2.8:340:17
+ADDED from com.awareframework:aware-core:3.3.3:344:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:340:25
+		ADDED from com.awareframework:aware-core:3.3.3:344:25
 action#android.intent.action.MEDIA_UNMOUNTED
-ADDED from com.awareframework:aware-core:3.2.8:341:17
+ADDED from com.awareframework:aware-core:3.3.3:345:17
 	android:name
-		ADDED from com.awareframework:aware-core:3.2.8:341:25
+		ADDED from com.awareframework:aware-core:3.3.3:345:25

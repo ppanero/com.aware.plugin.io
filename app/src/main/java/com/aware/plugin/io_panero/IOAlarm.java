@@ -21,13 +21,11 @@ public class IOAlarm extends BroadcastReceiver {
         Aware.setSetting(context, Aware_Preferences.STATUS_MAGNETOMETER, true);
         Aware.setSetting(context, Aware_Preferences.STATUS_LIGHT, true);
         Aware.setSetting(context, Aware_Preferences.STATUS_LOCATION_GPS, true);
-        Aware.setSetting(context, Aware_Preferences.STATUS_BATTERY, true);
         //unlock sensors
         Plugin.lockOffAccelerometer();
         Plugin.lockOffMagnetometer();
         Plugin.lockOffLocation();
         Plugin.lockOffLight();
-        Plugin.lockOffBattery();
         //Apply settings
         Intent apply = new Intent(Aware.ACTION_AWARE_REFRESH);
         context.sendBroadcast(apply);

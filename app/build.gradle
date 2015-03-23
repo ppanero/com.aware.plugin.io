@@ -9,8 +9,8 @@ android {
         applicationId "com.aware.plugin.io_panero"
         minSdkVersion 10
         targetSdkVersion 21
-        versionCode 64
-        versionName "6.4"
+        versionCode 70
+        versionName "7.0"
     }
     buildTypes {
         release {
