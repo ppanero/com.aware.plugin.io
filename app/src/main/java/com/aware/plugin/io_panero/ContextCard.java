@@ -157,6 +157,4 @@ public class ContextCard implements IContextCard {
             }
         }
     }
-
-
 }

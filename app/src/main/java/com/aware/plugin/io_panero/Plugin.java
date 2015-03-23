@@ -31,9 +31,8 @@ public class Plugin extends Aware_Plugin {
         3:=Battery
         4:=Light
         5:=GPS
-    The first columns will have either 1 (indoor) or 0 (outdoor).
-    The second column will have the Weight of the sensor in that precise moment,
-    therefor it will change in time.
+    The first column will have either 1 (indoor) or 0 (outdoor).
+    The second column will have the weight of the sensor according to its measured value-
     The third column is its value.
      */
     private static ContextProducer contextProducer;
@@ -94,6 +93,7 @@ public class Plugin extends Aware_Plugin {
             decisionMatrix[2][i] = 0;
         }
 
+        //Set settings (amount of samples for each sensor, and IO plugin awaking frequency)
         if (Aware.getSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER).length() == 0) {
             Aware.setSetting(getApplicationContext(), Settings.SAMPLES_ACCELEROMETER, 10);
         }
@@ -105,19 +105,23 @@ public class Plugin extends Aware_Plugin {
         if (Aware.getSetting(getApplicationContext(), Settings.SAMPLES_LIGHT_METER).length() == 0) {
             Aware.setSetting(getApplicationContext(), Settings.SAMPLES_LIGHT_METER, 5);
         }
+
         if (Aware.getSetting(getApplicationContext(), Settings.SAMPLES_LOCATION_METER).length() == 0) {
             Aware.setSetting(getApplicationContext(), Settings.SAMPLES_LOCATION_METER, 1);
         }
+
         if (Aware.getSetting(getApplicationContext(), Settings.FREQUENCY_IO_METER).length() == 0) {
             Aware.setSetting(getApplicationContext(), Settings.FREQUENCY_IO_METER, 3);
         }
 
+        //Turn on the sensors
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_BATTERY, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_MAGNETOMETER, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ACCELEROMETER, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_LOCATION_GPS, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_LIGHT, true);
 
+        //Context producer
         contextProducer = new ContextProducer() {
             @Override
             public void onContext() {
@@ -133,6 +137,7 @@ public class Plugin extends Aware_Plugin {
             }
         };
 
+        //Register the receivers
         IntentFilter magnetFilter = new IntentFilter();
         magnetFilter.addAction(Magnetometer.ACTION_AWARE_MAGNETOMETER);
         registerReceiver(magnetReceiver, magnetFilter);
@@ -160,15 +165,15 @@ public class Plugin extends Aware_Plugin {
 
         if (DEBUG) Log.d(TAG, "IO plugin running");
 
+        //Database
         DATABASE_TABLES = Provider.DATABASE_TABLES;
         TABLES_FIELDS = Provider.TABLES_FIELDS;
         CONTEXT_URIS = new Uri[]{Provider.IOMeter_Data.CONTENT_URI};
-
-
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //Set the alarm again or cancel it
         int interval_min = Integer.parseInt(Aware.getSetting(getApplicationContext(), Settings.FREQUENCY_IO_METER));
         if (interval_min != temp_interval) {
             if (interval_min >= 1) {
@@ -186,18 +191,21 @@ public class Plugin extends Aware_Plugin {
         super.onDestroy();
 
         if (DEBUG) Log.d(TAG, "IO plugin terminating.");
+        //Turn off the sensors
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_MAGNETOMETER, false);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_BATTERY, false);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ACCELEROMETER, false);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_LIGHT, false);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_LOCATION_GPS, false);
 
+        //Unregister receivers
         unregisterReceiver(magnetReceiver);
         unregisterReceiver(accelerometerReceiver);
         unregisterReceiver(batteryReceiver);
         unregisterReceiver(lightReceiver);
         unregisterReceiver(locationReceiver);
 
+        //Apply context
         sendBroadcast(new Intent(Aware.ACTION_AWARE_REFRESH));
     }
 
@@ -206,6 +214,8 @@ public class Plugin extends Aware_Plugin {
         double outdoor_counter = 0;
         double outdoor_weight = 0;
         double indoor_weight = 0;
+
+        //Go through the decision matrix
         synchronized(decisionMatrix) {
             for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
                 if (decisionMatrix[0][i] == 1) {
@@ -217,6 +227,8 @@ public class Plugin extends Aware_Plugin {
                 }
             }
         }
+
+        //Check which status has more weight
         if (indoor_weight >= outdoor_weight) {
             io_status = INDOOR;
             overallWeight = indoor_weight / indoor_counter;
@@ -224,6 +236,8 @@ public class Plugin extends Aware_Plugin {
             io_status = OUTDOOR;
             overallWeight = outdoor_weight / outdoor_counter;
         }
+
+        //Calculate elapsed time
         if (previous_elapsed_time == 0) {
             elapsed_time = System.currentTimeMillis() - starting_time;
         } else {
@@ -238,6 +252,7 @@ public class Plugin extends Aware_Plugin {
         int aux_elapsed_time = (int) (elapsed_time / 1000L);
         int aux_last_update = (int) (last_update / 1000L);
 
+        //Insert in the database
         ContentValues data = new ContentValues();
         data.put(IOMeter_Data.DEVICE_ID, Aware.getSetting(context, Aware_Preferences.DEVICE_ID));
         data.put(IOMeter_Data.TIMESTAMP, System.currentTimeMillis());
@@ -581,6 +596,4 @@ public class Plugin extends Aware_Plugin {
             }
         }
     }
-
-
 }
