@@ -27,9 +27,6 @@ public class ContextCard implements IContextCard {
     private Context sContext;
 
     //Set how often your card needs to refresh if the stream is visible (in milliseconds)
-    //private int alarm_frequency = Integer.parseInt(Aware.getSetting(sContext.getApplicationContext(), Settings.FREQUENCY_IO_METER));
-    //private int time_offset = 30 * 1000;
-    //private int refresh_interval =  (alarm_frequency * 60 * 1000) + time_offset; //1 second = 1000 milliseconds
     private int refresh_interval =  3 * 60 * 1000; //1 second = 1000 milliseconds
 
     //Declare here all the UI elements you'll be accessing

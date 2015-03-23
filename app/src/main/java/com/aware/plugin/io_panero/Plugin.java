@@ -272,12 +272,14 @@ public class Plugin extends Aware_Plugin {
         if (DEBUG) Log.d("Status updated", "The device is: " + io_status.toString() + " weight: " + overallWeight);
     }
 
+    //Locking off the sensors
+
     protected static void lockOffMagnetometer() {
         lockMagnetometer = false;
     }
 
     protected static void lockOffAccelerometer() {
-        lockMagnetometer = false;
+        lockAccelerometer = false;
     }
 
     protected static void lockOffLight() {
@@ -292,6 +294,10 @@ public class Plugin extends Aware_Plugin {
         lockBattery = false;
     }
 
+    /*
+    Transforms to string in the form of: X h X min X sec
+    The input is the amount of time in seconds (Unix Time)
+    */
     public static String secondsToTime(long seconds){
         long aux_seconds = seconds;
         if(aux_seconds < 0)
@@ -317,30 +323,49 @@ public class Plugin extends Aware_Plugin {
         return(sb.toString());
     }
 
+    /*
+    Calculates the hour offset due to the time zone of the device.
+     */
     public static long timezoneOffset(){
         return TimeUnit.MILLISECONDS.toSeconds(java.util.TimeZone.getDefault().getOffset(Calendar.ZONE_OFFSET));
     }
 
+    /*
+    Calculates the corresponding weight of the light sensor according to the
+    received hour of the day.
+     */
     public static double getHourWeight(int hour){
         return ((-0.5 / 11) * (hour % 12)) + 1;
     }
 
+    /*
+    Sensors receiver, the way the y work is the following
+    Upon receiving a broadcast they get form the settings the amount of samples they have to process
+    and the interval time (frequency) at which the plugin is being run.
+
+    They check that the frequency is higher than zero and that they are not locked.
+    After they check if they need to process more samples, if so they do. If not
+    they turn of the sensor and lock. After that they check which location and weight is inferred
+    from the value they measured.
+    In the end they restart their variables (avg, value, and counter) and update the status
+     */
     public static class MagnetReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            //get frequency and aount of samples
             int interval_min = Integer.parseInt(Aware.getSetting(context, Settings.FREQUENCY_IO_METER));
             int samples = Integer.parseInt(Aware.getSetting(context, Settings.SAMPLES_MAGNETOMETER));
-
+            //Check interval and lock status
             if (interval_min > 0 && !lockMagnetometer) {
-                if (magnet_counter < samples) {
+                if (magnet_counter < samples) { //Process samples
                     ContentValues values = (ContentValues) intent.getExtras().get(Magnetometer.EXTRA_DATA);
                     double value_x = Double.parseDouble(values.get(Magnetometer_Provider.Magnetometer_Data.VALUES_0).toString());
                     double value_y = Double.parseDouble(values.get(Magnetometer_Provider.Magnetometer_Data.VALUES_1).toString());
                     double value_z = Double.parseDouble(values.get(Magnetometer_Provider.Magnetometer_Data.VALUES_2).toString());
                     magnet_val += Math.sqrt(Math.pow(value_x, 2) + Math.pow(value_y, 2) + Math.pow(value_z, 2));
                     magnet_counter++;
-                } else {
+                } else {//Infer location type
                     //Turn off the sensor for computation
                     Aware.setSetting(context, Aware_Preferences.STATUS_MAGNETOMETER, false);
                     Intent apply = new Intent(Aware.ACTION_AWARE_REFRESH);
@@ -368,6 +393,7 @@ public class Plugin extends Aware_Plugin {
                         decisionMatrix[1][0] = 0.5;
                     }
                     decisionMatrix[2][0] = avg_magnet;
+                    //Restart variables
                     avg_magnet = 0;
                     magnet_val = 0;
                     magnet_counter = 0;
