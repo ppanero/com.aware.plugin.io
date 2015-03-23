@@ -30,7 +30,7 @@ public class ContextCard implements IContextCard {
     //private int alarm_frequency = Integer.parseInt(Aware.getSetting(sContext.getApplicationContext(), Settings.FREQUENCY_IO_METER));
     //private int time_offset = 30 * 1000;
     //private int refresh_interval =  (alarm_frequency * 60 * 1000) + time_offset; //1 second = 1000 milliseconds
-    private int refresh_interval =  200 * 1000; //1 second = 1000 milliseconds
+    private int refresh_interval =  3 * 60 * 1000; //1 second = 1000 milliseconds
 
     //Declare here all the UI elements you'll be accessing
     private View card;
@@ -43,14 +43,14 @@ public class ContextCard implements IContextCard {
     private TextView io_light_text;
     private TextView io_gps_text;
 
-    private int io_elapsed_time;
-    private int io_last_update;
-    private String io_status;
-    private double io_accelerometer;
-    private double io_magnetometer;
-    private int io_battery;
-    private double io_light;
-    private double io_gps;
+    private int io_elapsed_time = 0;
+    private int io_last_update = 0;
+    private String io_status = "Initializing";
+    private double io_accelerometer = 0;
+    private int io_magnetometer = 0;
+    private int io_battery = 0;
+    private int io_light = 0;
+    private int io_gps = 0;
 
     //Used to load your context card
     private LayoutInflater sInflater;
@@ -68,11 +68,11 @@ public class ContextCard implements IContextCard {
                     io_elapsed_time = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_ELAPSED_TIME));
                     io_last_update = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_LAST_UPDATE));
                     io_status = ioMeter.getString(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_STATUS));
-                    io_magnetometer = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_MAGNETOMETER));
+                    io_magnetometer = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_MAGNETOMETER));
                     io_accelerometer = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_ACCELEROMETER));
                     io_battery = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_BATTERY));
-                    io_light = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_LIGHT));
-                    io_gps = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_GPS));
+                    io_light = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_LIGHT));
+                    io_gps = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_GPS));
                 }
                 if( ioMeter != null && !ioMeter.isClosed()) ioMeter.close();
                 io_status_text.setText("IO Status: " + io_status);
@@ -118,13 +118,13 @@ public class ContextCard implements IContextCard {
             io_elapsed_time = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_ELAPSED_TIME));
             io_last_update = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_LAST_UPDATE));
             io_status = ioMeter.getString(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_STATUS));
-            io_magnetometer = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_MAGNETOMETER));
+            io_magnetometer = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_MAGNETOMETER));
             io_accelerometer = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_ACCELEROMETER));
             io_battery = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_BATTERY));
-            io_light = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_LIGHT));
-            io_gps = ioMeter.getDouble(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_GPS));
+            io_light = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_LIGHT));
+            io_gps = ioMeter.getInt(ioMeter.getColumnIndex(Provider.IOMeter_Data.IO_GPS));
         }
-        if( ioMeter != null && !ioMeter.isClosed()) ioMeter.close();
+        if (ioMeter != null && !ioMeter.isClosed()) ioMeter.close();
         io_status_text.setText("IO Status: " + io_status);
         io_elapsed_time_text.setText("Elapsed time: " + Plugin.secondsToTime(io_elapsed_time));
         io_last_update_text.setText("Last update: " + Plugin.secondsToTime(io_last_update + Plugin.timezoneOffset()));
@@ -135,7 +135,7 @@ public class ContextCard implements IContextCard {
         io_gps_text.setText("GPS accuracy: " + io_gps);
 
         //Begin refresh cycle
-        uiRefresher.post(uiChanger);
+        uiRefresher.postDelayed(uiChanger, refresh_interval);
 
         //Return the card to AWARE/apps
         return card;

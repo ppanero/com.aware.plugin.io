@@ -20,7 +20,7 @@ import com.aware.utils.DatabaseHelper;
 
 public class Provider extends ContentProvider {
 
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 11;
 
     /**
      * Provider authority: com.aware.plugin.io_panero.provider.io
@@ -42,13 +42,13 @@ public class Provider extends ContentProvider {
                     IOMeter_Data.TIMESTAMP + " real default 0," +
                     IOMeter_Data.DEVICE_ID + " text default ''," +
                     IOMeter_Data.IO_STATUS + " text default 'indoor'," +
-                    IOMeter_Data.IO_ELAPSED_TIME + " int default 0," +
-                    IOMeter_Data.IO_LAST_UPDATE + " int default 0," +
-                    IOMeter_Data.IO_MAGNETOMETER + " real default 0," +
+                    IOMeter_Data.IO_ELAPSED_TIME + " integer default 0," +
+                    IOMeter_Data.IO_LAST_UPDATE + " integer default 0," +
+                    IOMeter_Data.IO_MAGNETOMETER + " integer default 0," +
                     IOMeter_Data.IO_ACCELEROMETER + " real default 0," +
                     IOMeter_Data.IO_BATTERY + " integer default 0," +
-                    IOMeter_Data.IO_LIGHT + " real default 0," +
-                    IOMeter_Data.IO_GPS + " real default 0," +
+                    IOMeter_Data.IO_LIGHT + " integer default 0," +
+                    IOMeter_Data.IO_GPS + " integer default 0," +
                     "UNIQUE("+IOMeter_Data.TIMESTAMP+","+IOMeter_Data.DEVICE_ID+")"
     };
 
@@ -65,11 +65,11 @@ public class Provider extends ContentProvider {
         public static final String IO_STATUS = "io_status";
         public static final String IO_ELAPSED_TIME = "elapsed_time";
         public static final String IO_LAST_UPDATE = "last_update";
-        public static final String IO_MAGNETOMETER = "double_magnetometer";
+        public static final String IO_MAGNETOMETER = "magnetometer";
         public static final String IO_ACCELEROMETER = "double_accelerometer";
         public static final String IO_BATTERY = "battery";
-        public static final String IO_LIGHT = "double_light";
-        public static final String IO_GPS = "double_gps";
+        public static final String IO_LIGHT = "light";
+        public static final String IO_GPS = "gps";
     }
 
     private static UriMatcher URIMatcher;
